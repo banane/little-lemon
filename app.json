@@ -17,6 +17,13 @@
     "ios": {
       "supportsTablet": true
     },
+    "plugins":[
+	["expo-font",
+	{ 
+		"fonts": ["./assets/fonts/Klarna-Regular.ttf", "./assets/fonts/MarkaziText-Regular.ttf"]
+	}
+	]
+     ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
