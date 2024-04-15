@@ -6,7 +6,7 @@ const Splash = ({navigation}) => {
 
     return (
         <View style={{alignItems:'center', marginTop: 100,}}>
-            <Image source={require('../assets/Logo.png')} />
+            <Image source={require('../assets/splash.png')} />
         </View>
     )
 };
