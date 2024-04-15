@@ -1,5 +1,5 @@
 import { 
-    Image, 
+    Alert, 
     KeyboardAvoidingView,
     Platform,
     Pressable,
@@ -11,9 +11,9 @@ import {
  import { useState } from 'react';
  import { useFonts } from 'expo-font';
  import Header from '../components/Header';
- import Button from '../components/Button';
+ import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Onboarding = ({}) => {
+const Onboarding = ({navigation}) => {
     const [fontsLoaded] = useFonts({
         'Klarna': require('../assets/fonts/Karla-Regular.ttf'),
       });
@@ -21,6 +21,14 @@ const Onboarding = ({}) => {
     const [email, onChangeEmail] = useState('');
     const validator = require('validator');
     const validForm = (name.length > 0) && (validator.isEmail(email));
+
+    const storeData = async () =>  {
+        try { 
+            AsyncStorage.setItem("isOnboarded", "true"); 
+          } catch (e) { 
+            Alert.alert("An error occurred"); 
+          } 
+    };
 
     return (
         <View style={{flex: 1, backgroundColor: '#efefee', width: '100%'}}>
@@ -53,9 +61,11 @@ const Onboarding = ({}) => {
                     style={[(validForm ? styles.activeButton : styles.inactiveButton),styles.button] } 
                     onPress={ () => {
                      if (validForm) {
-                        alert('🦄 form is OK');
+                        storeData();
+                        console.log("storing data: name: " + name + ", email: " + email);
+                        navigation.push('Profile');
                      } else {
-                        // alert('💩 form is not OK');
+                        alert('💩 form is not OK');
                      }
                     }}>
                     <Text style={validForm ? styles.buttonTextActive : styles.buttonTextInactive}>Next</Text>

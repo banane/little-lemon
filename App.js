@@ -1,24 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Onboarding from './screens/Onboarding'
-import { useFonts } from 'expo-font';
+import { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Onboarding from './screens/Onboarding';
+import Profile from './screens/Profile';
+import Splash from './screens/Splash';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOnboardingCompleted, setOnboardingCompleted] = useState(false)
+  const Stack = createNativeStackNavigator();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const value = await AsyncStorage.getItem('isOnboarded');
+        setIsLoading(false);
+        setOnboardingCompleted(value);
+      } catch (e) {
+        Alert.alert(`An error occurred: ${e.message}`);
+      }
+    })();
+  }, []);
+
+
+  if (isLoading) {
+     return <Splash />;
+  }
+
   return (
-    <View style={styles.container}>
-      {/* <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" /> */}
-      <Onboarding />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+      { (isOnboardingCompleted != null || isOnboardingCompleted != false) ? (
+        <Stack.Screen name="Profile" component={Profile} />
+      ) : (
+        <Stack.Screen name="Onboarding" component={Onboarding} />
+      )}
+     </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // backgroundColor: '#edefee',
-    paddingTop: StatusBar.currentHeight,
-    alignItems: 'center',
-    justifyContent: 'top',
-  },
-});
