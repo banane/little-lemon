@@ -13,6 +13,7 @@ import {
  import Header from '../components/Header';
  import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const Onboarding = ({navigation}) => {
     const [fontsLoaded] = useFonts({
         'Klarna': require('../assets/fonts/Karla-Regular.ttf'),
@@ -66,7 +67,7 @@ const Onboarding = ({navigation}) => {
                      if (validForm) {
                         storeData();
                         console.log("storing data: name: " + name + ", email: " + email);
-                        navigation.push('Profile');
+                        alert('🦄 is great')
                      } else {
                         alert('💩 form is not OK');
                      }

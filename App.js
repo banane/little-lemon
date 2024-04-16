@@ -7,33 +7,38 @@ import Splash from './screens/Splash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'react-native';
 import { useFonts } from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOnboardingCompleted, setOnboardingCompleted] = useState(false)
+
+  const [fontsLoaded] = useFonts({
+		Markazi: require('./assets/fonts/MarkaziText-Regular.ttf'),
+		Karla: require('./assets/fonts/Karla-Regular.ttf'),
+	});
+
   const Stack = createNativeStackNavigator();
-  
 
   useEffect(() => {
     (async () => {
+      if (!fontsLoaded) return;
       try {
+        console.log("in initial app start");
         const value = await AsyncStorage.getItem('isOnboarded');
         setIsLoading(false);
+        console.log("value: " + value.toString());
+        console.log("isOnboardingCompleted: " + isOnboardingCompleted.toString());
 
         setOnboardingCompleted(value);
       } catch (e) {
-        Alert.alert(`An error occurred: ${e.message}`);
+        Alert.alert(`An error occurred loading app: ${e.message}`);
       }
     })();
   }, []);
 
-  const [fontsLoaded] = useFonts({
-    'KarlaRegular': require('./assets/fonts/Karla-Regular.ttf'),
-    'MarkaziText': require('./assets/fonts/MarkaziText-Regular.ttf'),
-  });
 
-
-  if (isLoading && ![fontsLoaded]) {
+  if (isLoading) {
      return <Splash />;
   }
 
@@ -54,27 +59,36 @@ export default function App() {
       />
     );
   }
-  
-  
 
+  function BackButton() {
+    return (
+      <Ionicons 
+                                name="arrow-back-circle-sharp"                          
+                                size={20} 
+                                color="#495E57" 
+                                />
+    )
+  }
+  
+  
   return (
     <NavigationContainer >
       <Stack.Navigator>
-      { (isOnboardingCompleted != null || isOnboardingCompleted != false) ? (
-        <Stack.Screen 
-          name="Profile" 
-          component={Profile}  
-          options={{ 
-            headerTitle: (props) => <LogoTitle {...props} />, 
-            headerRight: (props) => <Avatar {...props} />,
-          }}
-          style={{backgroundColor: "#fff"}}
-        />
+      { (isOnboardingCompleted) ? (
+       <Stack.Screen 
+        name="Profile" 
+        component={Profile}  
+        options={{ 
+          headerLeft: (props) => <BackButton {...props} />,
+          headerTitle: (props) => <LogoTitle {...props} />, 
+          headerRight: (props) => <Avatar {...props} />,
+        }}
+        style={{backgroundColor: "#fff"}}
+      />         
       ) : (
         <Stack.Screen name="Onboarding" component={Onboarding} />
       )}
      </Stack.Navigator>
-    
     </NavigationContainer>
   );
 }

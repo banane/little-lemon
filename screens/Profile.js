@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
         textAlignVertical: 'center',
     },     
     font: {
-        // fontFamily: 'KarlaRegular',
+        fontFamily: 'Karla',
         fontWeight: 'regular',
     },
     formLabel: {
@@ -254,6 +254,8 @@ const styles = StyleSheet.create({
         margin: 10, padding: 10,
         backgroundColor: '#fff', 
         borderRadius: 6,
+        flex: 1,
+        width: '100%',
     },
     sectionTitle: {
         fontSize: 20, 
