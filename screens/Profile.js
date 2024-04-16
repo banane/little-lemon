@@ -2,6 +2,7 @@ import {
     Image, 
     KeyboardAvoidingView,
     Platform,
+    Pressable,
     ScrollView,
     StyleSheet, 
     Text, 
@@ -15,7 +16,18 @@ const Profile = ({navigation}) => {
     const [lastName, onLastNameChange] = useState('');
     const [email, onEmailChange] = useState('');
     const [phone, onPhoneChange] = useState('');
-    
+   
+    const clearForm = ({}) =>  {
+        // onLastNameChange('');
+        // onFirstNameChange('');
+        // onEmailChange('');
+        // onPhoneChange('');
+        console.log("clear form");
+    };
+    const saveForm = ({}) => {
+        console.log("save form");
+    };
+
     return (
        <ScrollView>
         <KeyboardAvoidingView 
@@ -79,14 +91,24 @@ const Profile = ({navigation}) => {
                     <Ionicons name="checkbox" size={20} color="#495E57" style={styles.checkmark} />
                    <Text>Newsletter</Text>
                 </View>
-                <View style={styles.logoutButton}><Text style={styles.logoutButtonText}> Log out</Text></View>
-                <View style={styles.changesButtonsView} >
-                    <View style={styles.discardButtonView}>
-                        <Text style={{alignSelf: 'center',}}>Discard changes</Text>
-                    </View>
-                    <View style={styles.saveButtonView}>
-                        <Text style={{alignSelf: 'center',color:'#fff'}}>Save changes</Text>
-                    </View>
+                <View style={styles.logoutButton}>
+                    <Text style={styles.logoutButtonText}> Log out</Text></View>
+                <View style={styles.buttonContainer}>
+                    <Pressable 
+                        onPress={clearForm}
+                        style={({pressed}) => [styles.buttonView, { backgroundColor: pressed ? '#495E57' : '#fff' }]}
+                        >
+                        <Text 
+                            style={({pressed}) => [styles.buttonText, { color: pressed ? '#fff' : '#495E57' }]}
+                        >Discard changes</Text>
+                    </Pressable>
+                    <Pressable 
+                        style={({pressed}) => [styles.buttonView, { backgroundColor: pressed ? '#495E57' : '#fff' }]}
+                        onPress={saveForm}>
+                        <Text 
+                            style={({pressed}) => [styles.buttonText, { color: pressed ? '#fff' : '#495E57' }]}
+                        >Save changes</Text>
+                    </Pressable>
                 </View>
             </View>
         </KeyboardAvoidingView>
@@ -96,30 +118,23 @@ const Profile = ({navigation}) => {
 
 
 const styles = StyleSheet.create({
-    changesButtonsView:{
+    buttonContainer:{
         flexDirection: 'row',
         padding: 10,
         marginTop: 20,
-        marginRight: 30,
-        marginLeft: 30,
+        marginRight: 20,
+        marginLeft: 20,
     }, 
-    discardButtonView:{
+    buttonView: { 
         flex: 0.5,
         marginRight: 10,
+        padding: 8,
         borderRadius: 5,
         borderColor: '#495E57',
         borderWidth: 1,
-        paddingTop: 10,
-        paddingBottom: 10,
     },
-    saveButtonView:{
-        flex: 0.5,
-        backgroundColor:  '#495E57',
-        color: '#fff',
-        padding: 5,
-        borderRadius: 5,
-        paddingTop: 10,
-        paddingBottom: 10,
+    buttonText: {
+        alignSelf: 'center',
     },
     logoutButton: {
         backgroundColor: '#F4CE14',
@@ -171,7 +186,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     formView: {
-        width: '100%'
+        width: '100%',
+        flex: 1,
     },
     profileContainer: {
         alignItems: 'left', 
