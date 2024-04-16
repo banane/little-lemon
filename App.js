@@ -4,21 +4,22 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Onboarding from './screens/Onboarding';
 import Profile from './screens/Profile';
 import Splash from './screens/Splash';
-import Header from './components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'react-native';
-
+import { useFonts } from 'expo-font';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isOnboardingCompleted, setOnboardingCompleted] = useState(false)
   const Stack = createNativeStackNavigator();
+  
 
   useEffect(() => {
     (async () => {
       try {
         const value = await AsyncStorage.getItem('isOnboarded');
         setIsLoading(false);
+
         setOnboardingCompleted(value);
       } catch (e) {
         Alert.alert(`An error occurred: ${e.message}`);
@@ -26,8 +27,13 @@ export default function App() {
     })();
   }, []);
 
+  const [fontsLoaded] = useFonts({
+    'KarlaRegular': require('./assets/fonts/Karla-Regular.ttf'),
+    'MarkaziText': require('./assets/fonts/MarkaziText-Regular.ttf'),
+  });
 
-  if (isLoading) {
+
+  if (isLoading && ![fontsLoaded]) {
      return <Splash />;
   }
 
@@ -52,7 +58,7 @@ export default function App() {
   
 
   return (
-    <NavigationContainer>
+    <NavigationContainer >
       <Stack.Navigator>
       { (isOnboardingCompleted != null || isOnboardingCompleted != false) ? (
         <Stack.Screen 
@@ -62,6 +68,7 @@ export default function App() {
             headerTitle: (props) => <LogoTitle {...props} />, 
             headerRight: (props) => <Avatar {...props} />,
           }}
+          style={{backgroundColor: "#fff"}}
         />
       ) : (
         <Stack.Screen name="Onboarding" component={Onboarding} />
