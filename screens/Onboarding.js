@@ -25,6 +25,9 @@ const Onboarding = ({navigation}) => {
     const storeData = async () =>  {
         try { 
             AsyncStorage.setItem("isOnboarded", "true"); 
+            AsyncStorage.setItem("email", email);
+            AsyncStorage.setItem("name", name);
+
           } catch (e) { 
             Alert.alert("An error occurred"); 
           } 

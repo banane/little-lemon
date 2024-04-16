@@ -8,10 +8,14 @@ import {
     Text, 
     TextInput, 
     View } from 'react-native';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { MaskedTextInput } from "react-native-mask-text";
+
 
 const Profile = ({navigation}) => {
+    const validator = require('validator');
+
     const [firstName, onFirstNameChange] = useState('');
     const [lastName, onLastNameChange] = useState('');
     const [email, onEmailChange] = useState('');
@@ -38,124 +42,134 @@ const Profile = ({navigation}) => {
         console.log("clear form");
     };
     const saveForm = ({}) => {
+        if (validator.isMobilePhone(phone.toString(), 'en-US')) {
+            console.log("valid format: " + phone);
+        } else {
+            console.log("💩 invalid format: " + phone);
+            alert('💩 phone is not  OK: ' + phone);
+        }
         console.log("save form");
     };
 
 
     return (
-       <ScrollView>
+
         <KeyboardAvoidingView 
                     style={styles.profileContainer}
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <Text style={[styles.sectionTitle, styles.font]}>Personal information</Text>
+            <ScrollView  keyboardDismissMode="on-drag">
+                <Text style={[styles.sectionTitle, styles.font]}>Personal information</Text>
 
-            <Text style={[styles.avatarText,styles.font]}>Avatar</Text>
-            <View style={styles.profileView} >
-                <Image source={require('../assets/profile-tiny.png')} 
-                    style={styles.avatarImage}/>
-                <View style={styles.changeButton}>
-                    <Text style={styles.changeButtonText}>Change</Text>
+                <Text style={[styles.avatarText,styles.font]}>Avatar</Text>
+                <View style={styles.profileView} >
+                    <Image source={require('../assets/profile-tiny.png')} 
+                        style={styles.avatarImage}/>
+                    <View style={styles.changeButton}>
+                        <Text style={styles.changeButtonText}>Change</Text>
+                    </View>
+                    <View style={styles.removeButton}>
+                        <Text style={[styles.removeButtonText,styles.font]}>Remove</Text></View>
                 </View>
-                <View style={styles.removeButton}>
-                    <Text style={[styles.removeButtonText,styles.font]}>Remove</Text></View>
-            </View>
-            <View style={styles.formView} >
-                <Text style={[styles.formLabel, styles.font]}>First name</Text>
-                <View style={styles.inputBox}>
-                    <TextInput styles={styles.input} 
-                        value={firstName}
-                        onChange={onFirstNameChange}
+                <View style={styles.formView} >
+                    <Text style={[styles.formLabel, styles.font]}>First name</Text>
+                    <View style={styles.inputBox}>
+                        <TextInput styles={styles.input} 
+                            value={firstName}
+                            onChangeText={onFirstNameChange}
+                            />
+                    </View>
+                    <Text style={[styles.formLabel, styles.font]}>Last name</Text>
+                    <View style={styles.inputBox}>
+                        <TextInput styles={styles.input} 
+                            value={lastName}
+                            onChangeText={onLastNameChange}/>
+                    </View>
+                    <Text style={[styles.formLabel, styles.font]}>Email</Text>
+                    <View style={styles.inputBox}>
+                        <TextInput styles={styles.input} 
+                            value={email}
+                            onChangeText={onEmailChange}
+                            keyboardType={'email-address'} 
                         />
-                </View>
-                <Text style={[styles.formLabel, styles.font]}>Last name</Text>
-                <View style={styles.inputBox}>
-                    <TextInput styles={styles.input} 
-                        value={lastName}
-                        onChange={onLastNameChange}/>
-                </View>
-                <Text style={[styles.formLabel, styles.font]}>Email</Text>
-                <View style={styles.inputBox}><TextInput styles={styles.input} 
-                    value={email}
-                    onChange={onEmailChange}
-                    keyboardType={'email-address'} 
-                    />
-                </View>
-                <Text style={[styles.formLabel, styles.font]}>Phone number</Text>
-                <View style={styles.inputBox}>
-                    <TextInput styles={styles.input} 
-                        value={phone}
-                        onChange={onPhoneChange}
-                        keyboardType={'email-address'} 
-                    />
-                </View>
+                    </View>
+                    <Text style={[styles.formLabel, styles.font]}>Phone number</Text>
+                    <View style={styles.inputBox}>
+                        <MaskedTextInput 
+                            styles={styles.input} 
+                            value={phone}
+                            mask="(999) 999-9999"
+                            keyboardType={'phone-pad'} 
+                            onChangeText={ onPhoneChange }
+                        />
+                    </View>
 
-                <Text style={[styles.sectionTitle, styles.font, {marginTop: 20,}]}>Email notifications</Text>
-                <View style={styles.checkmarkView}>
-                    <Pressable
-                        onPress={updateState('orderStatuses')}>
-                        <Ionicons 
-                            name={ preferences.orderStatuses ? "checkbox" : "checkbox-outline" }                             
-                            size={20} 
-                            color="#495E57" 
-                            style={styles.checkmark} />
-                    </Pressable>
-                    <Text>Order statuses</Text>
+                    <Text style={[styles.sectionTitle, styles.font, {marginTop: 20,}]}>Email notifications</Text>
+                    <View style={styles.checkmarkView}>
+                        <Pressable
+                            onPress={updateState('orderStatuses')}>
+                            <Ionicons 
+                                name={ preferences.orderStatuses ? "checkbox" : "checkbox-outline" }                             
+                                size={20} 
+                                color="#495E57" 
+                                style={styles.checkmark} />
+                        </Pressable>
+                        <Text>Order statuses</Text>
+                    </View>
+                    <View style={styles.checkmarkView}>
+                        <Pressable
+                            onPress={updateState('passwordChanges')}>
+                            <Ionicons 
+                                name={ preferences.passwordChanges ? "checkbox" : "checkbox-outline" }                             
+                                size={20} 
+                                color="#495E57" 
+                                style={styles.checkmark} />
+                        </Pressable>
+                        <Text>Password changes</Text>
+                    </View>
+                    <View style={styles.checkmarkView}>
+                        <Pressable
+                            onPress={updateState('specialOffers')}>
+                            <Ionicons 
+                                name={ preferences.specialOffers ? "checkbox" : "checkbox-outline" }                             
+                                size={20} 
+                                color="#495E57" 
+                                style={styles.checkmark} />
+                        </Pressable>
+                        <Text>Special offers</Text>
+                    </View>
+                    <View style={styles.checkmarkView}>
+                        <Pressable
+                            onPress={updateState('newsletter')}>
+                            <Ionicons 
+                                name={ preferences.newsletter ? "checkbox" : "checkbox-outline" }                             
+                                size={20} 
+                                color="#495E57" 
+                                style={styles.checkmark} />
+                        </Pressable>
+                    <Text>Newsletter</Text>
+                    </View>
+                    <View style={styles.logoutButton}>
+                        <Text style={styles.logoutButtonText}> Log out</Text></View>
+                    <View style={styles.buttonContainer}>
+                        <Pressable 
+                            onPress={clearForm}
+                            style={({pressed}) => [styles.buttonView, { backgroundColor: pressed ? '#495E57' : '#fff' }]}
+                            >
+                            <Text 
+                                style={({pressed}) => [styles.buttonText, { color: pressed ? '#fff' : '#495E57' }]}
+                            >Discard changes</Text>
+                        </Pressable>
+                        <Pressable 
+                            style={({pressed}) => [styles.buttonView, { backgroundColor: pressed ? '#495E57' : '#fff' }]}
+                            onPress={saveForm}>
+                            <Text 
+                                style={({pressed}) => [styles.buttonText, { color: pressed ? '#fff' : '#495E57' }]}
+                            >Save changes</Text>
+                        </Pressable>
+                    </View>
                 </View>
-                <View style={styles.checkmarkView}>
-                    <Pressable
-                        onPress={updateState('passwordChanges')}>
-                        <Ionicons 
-                            name={ preferences.passwordChanges ? "checkbox" : "checkbox-outline" }                             
-                            size={20} 
-                            color="#495E57" 
-                            style={styles.checkmark} />
-                    </Pressable>
-                    <Text>Password changes</Text>
-                </View>
-                <View style={styles.checkmarkView}>
-                    <Pressable
-                        onPress={updateState('specialOffers')}>
-                        <Ionicons 
-                            name={ preferences.specialOffers ? "checkbox" : "checkbox-outline" }                             
-                            size={20} 
-                            color="#495E57" 
-                            style={styles.checkmark} />
-                    </Pressable>
-                    <Text>Special offers</Text>
-                </View>
-                <View style={styles.checkmarkView}>
-                    <Pressable
-                        onPress={updateState('newsletter')}>
-                        <Ionicons 
-                            name={ preferences.newsletter ? "checkbox" : "checkbox-outline" }                             
-                            size={20} 
-                            color="#495E57" 
-                            style={styles.checkmark} />
-                    </Pressable>
-                   <Text>Newsletter</Text>
-                </View>
-                <View style={styles.logoutButton}>
-                    <Text style={styles.logoutButtonText}> Log out</Text></View>
-                <View style={styles.buttonContainer}>
-                    <Pressable 
-                        onPress={clearForm}
-                        style={({pressed}) => [styles.buttonView, { backgroundColor: pressed ? '#495E57' : '#fff' }]}
-                        >
-                        <Text 
-                            style={({pressed}) => [styles.buttonText, { color: pressed ? '#fff' : '#495E57' }]}
-                        >Discard changes</Text>
-                    </Pressable>
-                    <Pressable 
-                        style={({pressed}) => [styles.buttonView, { backgroundColor: pressed ? '#495E57' : '#fff' }]}
-                        onPress={saveForm}>
-                        <Text 
-                            style={({pressed}) => [styles.buttonText, { color: pressed ? '#fff' : '#495E57' }]}
-                        >Save changes</Text>
-                    </Pressable>
-                </View>
-            </View>
+            </ScrollView>
         </KeyboardAvoidingView>
-        </ScrollView>
     )
 };
 
@@ -175,6 +189,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderColor: '#495E57',
         borderWidth: 1,
+        marginBottom: 20,
     },
     buttonText: {
         alignSelf: 'center',
