@@ -16,17 +16,31 @@ const Profile = ({navigation}) => {
     const [lastName, onLastNameChange] = useState('');
     const [email, onEmailChange] = useState('');
     const [phone, onPhoneChange] = useState('');
+
+    const [preferences, setPreferences] = useState({
+        orderStatuses: true,
+        newsletter: true,
+        passwordChanges: true,
+        specialOffers: true,
+      });
+
+    const updateState = (key) => () =>
+      setPreferences((prevState) => ({
+        ...prevState,
+        [key]: !prevState[key],
+    }));
    
     const clearForm = ({}) =>  {
-        // onLastNameChange('');
-        // onFirstNameChange('');
-        // onEmailChange('');
-        // onPhoneChange('');
+        onLastNameChange('');
+        onFirstNameChange('');
+        onEmailChange('');
+        onPhoneChange('');
         console.log("clear form");
     };
     const saveForm = ({}) => {
         console.log("save form");
     };
+
 
     return (
        <ScrollView>
@@ -77,18 +91,47 @@ const Profile = ({navigation}) => {
 
                 <Text style={[styles.sectionTitle, styles.font, {marginTop: 20,}]}>Email notifications</Text>
                 <View style={styles.checkmarkView}>
-                    <Ionicons name="checkbox" size={20} color="#495E57" style={styles.checkmark} />
-                    <Text>Order statuses</Text></View>
+                    <Pressable
+                        onPress={updateState('orderStatuses')}>
+                        <Ionicons 
+                            name={ preferences.orderStatuses ? "checkbox" : "checkbox-outline" }                             
+                            size={20} 
+                            color="#495E57" 
+                            style={styles.checkmark} />
+                    </Pressable>
+                    <Text>Order statuses</Text>
+                </View>
                 <View style={styles.checkmarkView}>
-                    <Ionicons name="checkbox" size={20} color="#495E57" style={styles.checkmark} />
+                    <Pressable
+                        onPress={updateState('passwordChanges')}>
+                        <Ionicons 
+                            name={ preferences.passwordChanges ? "checkbox" : "checkbox-outline" }                             
+                            size={20} 
+                            color="#495E57" 
+                            style={styles.checkmark} />
+                    </Pressable>
                     <Text>Password changes</Text>
                 </View>
                 <View style={styles.checkmarkView}>
-                    <Ionicons name="checkbox" size={20} color="#495E57" style={styles.checkmark} />
+                    <Pressable
+                        onPress={updateState('specialOffers')}>
+                        <Ionicons 
+                            name={ preferences.specialOffers ? "checkbox" : "checkbox-outline" }                             
+                            size={20} 
+                            color="#495E57" 
+                            style={styles.checkmark} />
+                    </Pressable>
                     <Text>Special offers</Text>
                 </View>
                 <View style={styles.checkmarkView}>
-                    <Ionicons name="checkbox" size={20} color="#495E57" style={styles.checkmark} />
+                    <Pressable
+                        onPress={updateState('newsletter')}>
+                        <Ionicons 
+                            name={ preferences.newsletter ? "checkbox" : "checkbox-outline" }                             
+                            size={20} 
+                            color="#495E57" 
+                            style={styles.checkmark} />
+                    </Pressable>
                    <Text>Newsletter</Text>
                 </View>
                 <View style={styles.logoutButton}>
