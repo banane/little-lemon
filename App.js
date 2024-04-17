@@ -21,21 +21,22 @@ export default function App() {
   const Stack = createNativeStackNavigator();
 
   useEffect(() => {
-    (async () => {
-      if (!fontsLoaded) return;
+    async function loadApp() {
+      if(!fontsLoaded) return;
       try {
-        console.log("in initial app start");
-        const value = await AsyncStorage.getItem('isOnboarded');
+        const isOnboardedValue = await AsyncStorage.getItem('isOnboarded');
+        console.log("isOnboardedValue: " + isOnboardedValue);
+        setOnboardingCompleted(isOnboardedValue);
+        // setOnboardingCompleted(false);
         setIsLoading(false);
-        console.log("value: " + value.toString());
-        console.log("isOnboardingCompleted: " + isOnboardingCompleted.toString());
-
-        setOnboardingCompleted(value);
       } catch (e) {
-        Alert.alert(`An error occurred loading app: ${e.message}`);
+        console.error('error loading app: ', error);
+        setIsLoading(false);
       }
-    })();
-  }, []);
+    }
+
+    loadApp();
+  }, [fontsLoaded]);
 
 
   if (isLoading) {

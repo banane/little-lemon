@@ -8,18 +8,37 @@ import {
     Text, 
     TextInput, 
     View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { MaskedTextInput } from "react-native-mask-text";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
+import AvatarView from '../components/AvatarView';
 
 const Profile = ({navigation}) => {
     const validator = require('validator');
+    const [image, setImage] = useState(null);
 
-    const [firstName, onFirstNameChange] = useState('');
-    const [lastName, onLastNameChange] = useState('');
-    const [email, onEmailChange] = useState('');
-    const [phone, onPhoneChange] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+        }
+    };
 
     const [preferences, setPreferences] = useState({
         orderStatuses: true,
@@ -33,23 +52,73 @@ const Profile = ({navigation}) => {
         ...prevState,
         [key]: !prevState[key],
     }));
+
+
+    useEffect(() => {
+      loadProfileData();            
+    }, []);
+
+    const loadProfileData = async () => {
+        try {
+            const jsonString = await AsyncStorage.getItem('user');
+			if (!jsonString) return;
+			await setProfileValues(JSON.parse(jsonString));
+        } catch (e) {
+            console.log("error: " + e);
+        }
+    }
+
+    const setProfileValues = async userAsyncStorage => {
+        const { firstName, email, lastName, phone } = userAsyncStorage;
+		setFirstName(firstName);
+		setLastName(lastName || '');
+		setEmail(email);
+		setPhone(phone || '');
+    };
+
+    const logOut = async () =>  {
+        try { 
+            setLastName('');
+            setFirstName('');
+            setEmail('');
+            setPhone('');
+            await AsyncStorage.clear();
+            alert("🦄 Logged out.");
+        } catch (e) {
+            console.log("clearing form error: " + e);
+        }
+    };
+    
    
     const clearForm = ({}) =>  {
-        onLastNameChange('');
-        onFirstNameChange('');
-        onEmailChange('');
-        onPhoneChange('');
-        console.log("clear form");
+        loadProfileData();
+        alert("Changes discarded.")
     };
     const saveForm = ({}) => {
         if (validator.isMobilePhone(phone.toString(), 'en-US')) {
             console.log("valid format: " + phone);
+            saveFormToDb();
         } else {
             console.log("💩 invalid format: " + phone);
             alert('💩 phone is not  OK: ' + phone);
         }
-        console.log("save form");
     };
+
+    const saveFormToDb = async () => {
+        try {
+             await AsyncStorage.setItem("email", email);
+             await AsyncStorage.setItem("firstName", firstName);
+             await AsyncStorage.setItem("lastName", lastName);
+             await AsyncStorage.setItem("phone", phone);
+            alert("🦄 Saved to db.");
+            console.log("🦄 Saved to db.");
+
+
+        } catch (e) {
+            console.log("Error saving email: " + e);
+        }
+    };
+
 
 
     return (
@@ -62,33 +131,38 @@ const Profile = ({navigation}) => {
 
                 <Text style={[styles.avatarText,styles.font]}>Avatar</Text>
                 <View style={styles.profileView} >
-                    <Image source={require('../assets/profile-tiny.png')} 
-                        style={styles.avatarImage}/>
-                    <View style={styles.changeButton}>
+                    <AvatarView image={image} firstName={firstName} lastName={lastName}/>
+                    
+                    <Pressable style={styles.changeButton}
+                        onPress={pickImage}
+                    >
                         <Text style={styles.changeButtonText}>Change</Text>
-                    </View>
-                    <View style={styles.removeButton}>
-                        <Text style={[styles.removeButtonText,styles.font]}>Remove</Text></View>
+                    </Pressable>
+                    <Pressable style={styles.removeButton}
+                        onPress={ () => {
+                            setImage('');
+                        }}>
+                        <Text style={[styles.removeButtonText,styles.font]}>Remove</Text></Pressable>
                 </View>
                 <View style={styles.formView} >
                     <Text style={[styles.formLabel, styles.font]}>First name</Text>
                     <View style={styles.inputBox}>
                         <TextInput styles={styles.input} 
                             value={firstName}
-                            onChangeText={onFirstNameChange}
+                            onChangeText={setFirstName}
                             />
                     </View>
                     <Text style={[styles.formLabel, styles.font]}>Last name</Text>
                     <View style={styles.inputBox}>
                         <TextInput styles={styles.input} 
                             value={lastName}
-                            onChangeText={onLastNameChange}/>
+                            onChangeText={setLastName}/>
                     </View>
                     <Text style={[styles.formLabel, styles.font]}>Email</Text>
                     <View style={styles.inputBox}>
                         <TextInput styles={styles.input} 
                             value={email}
-                            onChangeText={onEmailChange}
+                            onChangeText={setEmail}
                             keyboardType={'email-address'} 
                         />
                     </View>
@@ -99,7 +173,7 @@ const Profile = ({navigation}) => {
                             value={phone}
                             mask="(999) 999-9999"
                             keyboardType={'phone-pad'} 
-                            onChangeText={ onPhoneChange }
+                            onChangeText={ setPhone }
                         />
                     </View>
 
@@ -148,8 +222,11 @@ const Profile = ({navigation}) => {
                         </Pressable>
                     <Text>Newsletter</Text>
                     </View>
-                    <View style={styles.logoutButton}>
-                        <Text style={styles.logoutButtonText}> Log out</Text></View>
+                    <Pressable 
+                        style={styles.logoutButton}
+                        onPress={logOut}>
+                        <Text style={styles.logoutButtonText}> Log out</Text>
+                    </Pressable>
                     <View style={styles.buttonContainer}>
                         <Pressable 
                             onPress={clearForm}
@@ -175,6 +252,7 @@ const Profile = ({navigation}) => {
 
 
 const styles = StyleSheet.create({
+    
     buttonContainer:{
         flexDirection: 'row',
         padding: 10,
@@ -261,12 +339,7 @@ const styles = StyleSheet.create({
         fontSize: 20, 
         fontWeight: 'bold',
     },
-    avatarImage: {
-        height: 100, 
-        width: 100, 
-        resizeMode: 'cover',
-        marginRight: 20,
-    },
+    
     avatarText: {
         fontSize: 14, 
         marginVertical: 10,

@@ -8,7 +8,6 @@ const Splash = ({navigation}) => {
     return (
         <View style={{alignItems:'center', marginTop: 100,}}>
             <Image source={require('../assets/Logo.png')} />
-            <Ionicons name="checkbox" size={20} color="#333" />
         </View>
     )
 };

@@ -18,19 +18,19 @@ const Onboarding = ({navigation}) => {
     const [fontsLoaded] = useFonts({
         'Klarna': require('../assets/fonts/Karla-Regular.ttf'),
       });
-    const [name, onChangeName] = useState('');
+    const [firstName, onChangeName] = useState('');
     const [email, onChangeEmail] = useState('');
     const validator = require('validator');
     const validForm = (name.length > 0) && (validator.isEmail(email));
 
     const storeData = async () =>  {
         try { 
-            AsyncStorage.setItem("isOnboarded", "true"); 
-            AsyncStorage.setItem("email", email);
-            AsyncStorage.setItem("name", name);
+            await AsyncStorage.setItem("isOnboarded", "true"); 
+            await AsyncStorage.setItem("email", email);
+            await AsyncStorage.setItem("firstName", firstName);
 
           } catch (e) { 
-            Alert.alert("An error occurred"); 
+            Alert.alert("An error occurred" + e); 
           } 
     };
 
@@ -49,7 +49,7 @@ const Onboarding = ({navigation}) => {
                         >First Name</Text>
                     <TextInput 
                         style={styles.input}
-                        value={name}
+                        value={firstName}
                         onChangeText={onChangeName} />
                         
                     <Text style={styles.bodyText}>Email</Text>
