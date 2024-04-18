@@ -1,7 +1,10 @@
 import { Text, View} from 'react-native';
+import Hero from '../components/Hero'
 
 const HomeScreen = () => {
-    return(<View><Text>Home</Text></View>);
+    return(
+        <Hero />
+    );
 };
 
 export default HomeScreen;
