@@ -9,11 +9,12 @@ import {
     TextInput, 
     View } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+
 import { MaskedTextInput } from "react-native-mask-text";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import AvatarView from '../components/AvatarView';
+import CheckBoxPreference from '../components/CheckBoxPreference';
 
 const Profile = ({navigation}) => {
     const validator = require('validator');
@@ -52,7 +53,6 @@ const Profile = ({navigation}) => {
         ...prevState,
         [key]: !prevState[key],
     }));
-
 
     useEffect(() => {
       loadProfileData();            
@@ -178,50 +178,20 @@ const Profile = ({navigation}) => {
                     </View>
 
                     <Text style={[styles.sectionTitle, styles.font, {marginTop: 20,}]}>Email notifications</Text>
-                    <View style={styles.checkmarkView}>
-                        <Pressable
-                            onPress={updateState('orderStatuses')}>
-                            <Ionicons 
-                                name={ preferences.orderStatuses ? "checkbox" : "checkbox-outline" }                             
-                                size={20} 
-                                color="#495E57" 
-                                style={styles.checkmark} />
-                        </Pressable>
-                        <Text>Order statuses</Text>
-                    </View>
-                    <View style={styles.checkmarkView}>
-                        <Pressable
-                            onPress={updateState('passwordChanges')}>
-                            <Ionicons 
-                                name={ preferences.passwordChanges ? "checkbox" : "checkbox-outline" }                             
-                                size={20} 
-                                color="#495E57" 
-                                style={styles.checkmark} />
-                        </Pressable>
-                        <Text>Password changes</Text>
-                    </View>
-                    <View style={styles.checkmarkView}>
-                        <Pressable
-                            onPress={updateState('specialOffers')}>
-                            <Ionicons 
-                                name={ preferences.specialOffers ? "checkbox" : "checkbox-outline" }                             
-                                size={20} 
-                                color="#495E57" 
-                                style={styles.checkmark} />
-                        </Pressable>
-                        <Text>Special offers</Text>
-                    </View>
-                    <View style={styles.checkmarkView}>
-                        <Pressable
-                            onPress={updateState('newsletter')}>
-                            <Ionicons 
-                                name={ preferences.newsletter ? "checkbox" : "checkbox-outline" }                             
-                                size={20} 
-                                color="#495E57" 
-                                style={styles.checkmark} />
-                        </Pressable>
-                    <Text>Newsletter</Text>
-                    </View>
+                    <CheckBoxPreference preferenceName={"orderStatuses"} 
+                        preferenceValue={preferences.orderStatuses}
+                        onChange={updateState('orderStatuses')} />
+                    <CheckBoxPreference preferenceName={"specialOffers"} 
+                        preferenceValue={preferences.specialOffers}
+                        onChange={updateState('specialOffers')} />
+                    <CheckBoxPreference preferenceName={"passwordChanges"} 
+                        preferenceValue={preferences.passwordChanges}
+                        onChange={updateState('passwordChanges')} />
+                    <CheckBoxPreference preferenceName={"passwordChanges"} 
+                        preferenceValue={preferences.newsletter}
+                        onChange={updateState('newsletter')} />
+                   
+                        
                     <Pressable 
                         style={styles.logoutButton}
                         onPress={logOut}>
@@ -285,13 +255,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         alignSelf: 'center',
         padding: 10,
-    },
-    checkmark: {
-        marginRight: 15,
-    },
-    checkmarkView: {
-        flexDirection: 'row',
-        marginVertical: 8,
     },
     inputBox: {
         borderColor: "#eee", 
