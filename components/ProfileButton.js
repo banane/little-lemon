@@ -5,21 +5,24 @@ const ProfileButton = ({title, onPress, priority=false}) => {
     white = '#fff';
     green = '#495E57'
     
-    var bgColor = white;
-    var pressedBgColor = green;
+    var bgColor ;
+    var pressedBgColor;
     if (priority) {
         bgColor = green;
         pressedBgColor = white;
+    } else {
+        bgColor = white;
+        pressedBgColor = green;
     }
 
     return(
        <View>
         <Pressable 
             style={({pressed}) => [styles.buttonView, { 
-                backgroundColor: pressed ? bgColor : pressedBgColor, 
+                backgroundColor: pressed ? pressedBgColor : bgColor, 
             }]}
             onPress={onPress}>
-            <Text style={ { color: priority ? '#495E57' : '#fff' }}>{title}</Text>
+            <Text style={ { color: priority ? white : green }}>{title}</Text>
         </Pressable>
         </View>
     );
@@ -35,7 +38,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderColor: '#495E57',
         borderWidth: 1,
-        // marginBottom: 20,
         textAlign: 'center',
         paddingLeft: 8,
         paddingRight: 8,

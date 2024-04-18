@@ -21,7 +21,7 @@ const Onboarding = ({navigation}) => {
     const [firstName, onChangeName] = useState('');
     const [email, onChangeEmail] = useState('');
     const validator = require('validator');
-    const validForm = (name.length > 0) && (validator.isEmail(email));
+    const validForm = (firstName.length > 0) && (validator.isEmail(email));
 
     const storeData = async () =>  {
         try { 
@@ -66,7 +66,6 @@ const Onboarding = ({navigation}) => {
                     onPress={ () => {
                      if (validForm) {
                         storeData();
-                        console.log("storing data: name: " + name + ", email: " + email);
                         alert('🦄 is great')
                      } else {
                         alert('💩 form is not OK');

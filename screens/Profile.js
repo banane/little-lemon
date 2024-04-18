@@ -19,6 +19,7 @@ import ProfileButton from '../components/ProfileButton';
 const Profile = ({navigation}) => {
     const validator = require('validator');
     const [image, setImage] = useState(null);
+    const [imageString, setImageString] = useState(''); // for temporary storage or uri
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -38,6 +39,8 @@ const Profile = ({navigation}) => {
     
         if (!result.canceled) {
           setImage(result.assets[0].uri);
+          console.log("result.assets[0].uri" + result.assets[0].uri);
+          setImageString(result.assets[0].uri);
         }
     };
 
@@ -54,29 +57,48 @@ const Profile = ({navigation}) => {
         [key]: !prevState[key],
     }));
 
+    const updateStateAndValue = (key, value) => () => 
+        setPreferences((prevState) => ({
+            ...prevState,
+            [key]: value,
+        }
+    ));
+
     useEffect(() => {
       setProfileValues();            
     }, []);
 
     const setProfileValues = async () => {
         const emailValue = await AsyncStorage.getItem('email');
-        const firstNameValue = await AsyncStorage.getItem('firstName');
-        const lastNameValue = await AsyncStorage.getItem('lastName');
-        const phoneValue = await AsyncStorage.getItem('phone');
-        console.log("in set profile values, phoneValue: " + phoneValue);
-
         if(emailValue) {
             setEmail(emailValue);
         }
+
+        const firstNameValue = await AsyncStorage.getItem('firstName');
+
         if(firstNameValue) {
             setFirstName(firstNameValue);
-        }415
+        }
+        const lastNameValue = await AsyncStorage.getItem('lastName');
         if(lastNameValue) {
             setLastName(lastNameValue);
         }
+        const phoneValue = await AsyncStorage.getItem('phone');
 		if(phoneValue) {
             setPhone(phoneValue);
         }
+        const preferencesString = await AsyncStorage.getItem('preferences');
+        const preferencesObject = JSON.parse(preferencesString);
+        if(preferencesObject) {
+            setPreferences(preferencesObject);
+        }
+
+        const imageValue = await AsyncStorage.getItem('image');
+        if(imageValue) {
+            setImage(imageValue);
+        }
+
+
     };
 
     const logOut = async () =>  {
@@ -94,7 +116,7 @@ const Profile = ({navigation}) => {
     
    
     const clearForm = ({}) =>  {
-        loadProfileData();
+        setProfileValues();
         alert("Changes discarded.")
     };
 
@@ -116,6 +138,8 @@ const Profile = ({navigation}) => {
              await AsyncStorage.setItem("firstName", firstName);
              await AsyncStorage.setItem("lastName", lastName);
              await AsyncStorage.setItem("phone", phone);
+             await AsyncStorage.setItem("preferences", JSON.stringify(preferences));
+             await AsyncStorage.setItem("image", imageString);
             alert("🦄 Saved to db.");
             console.log("🦄 Saved to db.");
        } catch (e) {
