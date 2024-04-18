@@ -9,14 +9,15 @@ const AvatarView = ({image, firstName, lastName}) => {
 
     if (image) {
         return (
-        <View>
-            <Image source={{ uri: image }} style={[styles.avatarImage, styles.imageBase]} />
-        </View>);
+            <View>
+                <Image source={{ uri: image }} style={[styles.avatarImage, styles.imageBase]} />
+            </View>
+        );
     } else {
        return(
-        <View style={[styles.imageDefaultView, styles.imageBase]}>
-            <Text style={styles.imageDefaultText}>{initials(firstName, lastName)}</Text>
-        </View>   
+            <View style={[styles.imageDefaultView, styles.imageBase]}>
+                <Text style={styles.imageDefaultText}>{initials(firstName, lastName)}</Text>
+            </View>   
         );
     }       
 };
@@ -25,14 +26,14 @@ const AvatarView = ({image, firstName, lastName}) => {
 const styles = StyleSheet.create({
     imageBase: {
         marginRight: 20,
-        borderRadius: 50,
+        borderRadius: 40,
         borderColor: '#495E57',
         borderWidth: 1,
-        width: 100,
-        height: 100,
+        width: 80,
+        height: 80,
     },
     imageDefaultText: {
-        fontSize: 54,
+        fontSize: 36,
         color:'#F4CE14',
         alignSelf: 'center',
         paddingTop: 17,

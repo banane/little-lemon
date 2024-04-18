@@ -10,11 +10,13 @@ import {
     View } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
-import { MaskedTextInput } from "react-native-mask-text";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import AvatarView from '../components/AvatarView';
 import CheckBoxPreference from '../components/CheckBoxPreference';
+import CustomInput from '../components/CustomInput';
+import ProfileButton from '../components/ProfileButton';
 
 const Profile = ({navigation}) => {
     const validator = require('validator');
@@ -107,14 +109,12 @@ const Profile = ({navigation}) => {
     const saveFormToDb = async () => {
         try {
              await AsyncStorage.setItem("email", email);
-             await AsyncStorage.setItem("firstName", firstName);
-             await AsyncStorage.setItem("lastName", lastName);
-             await AsyncStorage.setItem("phone", phone);
+            //  await AsyncStorage.setItem("firstName", firstName);
+            //  await AsyncStorage.setItem("lastName", lastName);
+            //  await AsyncStorage.setItem("phone", phone);
             alert("🦄 Saved to db.");
             console.log("🦄 Saved to db.");
-
-
-        } catch (e) {
+       } catch (e) {
             console.log("Error saving email: " + e);
         }
     };
@@ -132,50 +132,20 @@ const Profile = ({navigation}) => {
                 <Text style={[styles.avatarText,styles.font]}>Avatar</Text>
                 <View style={styles.profileView} >
                     <AvatarView image={image} firstName={firstName} lastName={lastName}/>
-                    
-                    <Pressable style={styles.changeButton}
-                        onPress={pickImage}
-                    >
-                        <Text style={styles.changeButtonText}>Change</Text>
-                    </Pressable>
-                    <Pressable style={styles.removeButton}
-                        onPress={ () => {
-                            setImage('');
-                        }}>
-                        <Text style={[styles.removeButtonText,styles.font]}>Remove</Text></Pressable>
+                    <View style={[styles.buttonContainer]}>
+                        <ProfileButton title={"Change"} onPress={pickImage} priority={true} />
+                        <ProfileButton title={"Remove"}  onPress={ () => {
+                                setImage('');
+                            }} priority={false} />
+                    </View>
+                   
                 </View>
                 <View style={styles.formView} >
-                    <Text style={[styles.formLabel, styles.font]}>First name</Text>
-                    <View style={styles.inputBox}>
-                        <TextInput styles={styles.input} 
-                            value={firstName}
-                            onChangeText={setFirstName}
-                            />
-                    </View>
-                    <Text style={[styles.formLabel, styles.font]}>Last name</Text>
-                    <View style={styles.inputBox}>
-                        <TextInput styles={styles.input} 
-                            value={lastName}
-                            onChangeText={setLastName}/>
-                    </View>
-                    <Text style={[styles.formLabel, styles.font]}>Email</Text>
-                    <View style={styles.inputBox}>
-                        <TextInput styles={styles.input} 
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType={'email-address'} 
-                        />
-                    </View>
-                    <Text style={[styles.formLabel, styles.font]}>Phone number</Text>
-                    <View style={styles.inputBox}>
-                        <MaskedTextInput 
-                            styles={styles.input} 
-                            value={phone}
-                            mask="(999) 999-9999"
-                            keyboardType={'phone-pad'} 
-                            onChangeText={ setPhone }
-                        />
-                    </View>
+                    <CustomInput name={'First name'} value={firstName} onChange={setFirstName} />
+                    <CustomInput name={'Last name'} value={lastName} onChange={setLastName} />
+                    <CustomInput name={'Email'} value={email} onChange={setEmail} keyboardType={'email-address'} />
+                    <CustomInput name={'Phone'} value={email} onChange={setPhone} keyboardType={'phone-pad'} />
+                
 
                     <Text style={[styles.sectionTitle, styles.font, {marginTop: 20,}]}>Email notifications</Text>
                     <CheckBoxPreference preferenceName={"Order Statuses"} 
@@ -198,21 +168,8 @@ const Profile = ({navigation}) => {
                         <Text style={styles.logoutButtonText}> Log out</Text>
                     </Pressable>
                     <View style={styles.buttonContainer}>
-                        <Pressable 
-                            onPress={clearForm}
-                            style={({pressed}) => [styles.buttonView, { backgroundColor: pressed ? '#495E57' : '#fff' }]}
-                            >
-                            <Text 
-                                style={({pressed}) => [styles.buttonText, { color: pressed ? '#fff' : '#495E57' }]}
-                            >Discard changes</Text>
-                        </Pressable>
-                        <Pressable 
-                            style={({pressed}) => [styles.buttonView, { backgroundColor: pressed ? '#495E57' : '#fff' }]}
-                            onPress={saveForm}>
-                            <Text 
-                                style={({pressed}) => [styles.buttonText, { color: pressed ? '#fff' : '#495E57' }]}
-                            >Save changes</Text>
-                        </Pressable>
+                        <ProfileButton title={"Discard Changes"} onPress={clearForm} priority={false} />
+                        <ProfileButton title={"Save Changes"} onPress={saveForm} priority={true} />
                     </View>
                 </View>
             </ScrollView>
@@ -230,18 +187,7 @@ const styles = StyleSheet.create({
         marginRight: 20,
         marginLeft: 20,
     }, 
-    buttonView: { 
-        flex: 0.5,
-        marginRight: 10,
-        padding: 8,
-        borderRadius: 5,
-        borderColor: '#495E57',
-        borderWidth: 1,
-        marginBottom: 20,
-    },
-    buttonText: {
-        alignSelf: 'center',
-    },
+
     logoutButton: {
         backgroundColor: '#F4CE14',
         width: '100%',
@@ -256,33 +202,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         padding: 10,
     },
-    inputBox: {
-        borderColor: "#eee", 
-        borderWidth: 3,
-        borderRadius: 5,
-        paddingTop: 10,
-        paddingLeft: 5,
-        width: '100%',
-         height: 40,
-    },
-    input: {
-        alignSelf: 'center',
-        height: 40,
-        width: '100%',
-        padding: 0,
-        width: '100%',
-        textAlignVertical: 'center',
-    },     
     font: {
         fontFamily: 'Karla',
         fontWeight: 'regular',
-    },
-    formLabel: {
-        fontSize: 12, 
-        color: '#333',
-        marginTop: 20,
-        marginBottom: 5,
-        fontWeight: 'bold',
     },
     formView: {
         width: '100%',
@@ -292,7 +214,8 @@ const styles = StyleSheet.create({
         alignItems: 'left', 
         borderWidth: 1, 
         borderColor: '#efefee', 
-        margin: 10, padding: 10,
+        margin: 10, 
+        padding: 10,
         backgroundColor: '#fff', 
         borderRadius: 6,
         flex: 1,
@@ -311,34 +234,6 @@ const styles = StyleSheet.create({
     profileView: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    changeButton: {
-        backgroundColor: '#495E57', 
-        height: 35, 
-        // width: 60, 
-        marginHorizontal: '1%', 
-        borderRadius: 5,
-        marginRigth: 20,
-    },
-    changeButtonText: {
-        textAlign: 'center',  
-        color: '#fff', 
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-    },
-    removeButton: {
-        backgroundColor: '#fff', 
-        height: 35, 
-        // width: 60,
-        borderColor: '#333',
-        borderWidth: 0.5,
-        marginHorizontal: 10,
-        paddingHorizontal: 10,
-    },
-    removeButtonText: {
-        textAlign: 'center', 
-        color: '#333', 
-        paddingVertical: 10,
     },
 });
 
