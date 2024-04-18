@@ -1,12 +1,10 @@
 import { 
-    Image, 
     KeyboardAvoidingView,
     Platform,
     Pressable,
     ScrollView,
     StyleSheet, 
     Text, 
-    TextInput, 
     View } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
@@ -57,25 +55,28 @@ const Profile = ({navigation}) => {
     }));
 
     useEffect(() => {
-      loadProfileData();            
+      setProfileValues();            
     }, []);
 
-    const loadProfileData = async () => {
-        try {
-            const jsonString = await AsyncStorage.getItem('user');
-			if (!jsonString) return;
-			await setProfileValues(JSON.parse(jsonString));
-        } catch (e) {
-            console.log("error: " + e);
-        }
-    }
+    const setProfileValues = async () => {
+        const emailValue = await AsyncStorage.getItem('email');
+        const firstNameValue = await AsyncStorage.getItem('firstName');
+        const lastNameValue = await AsyncStorage.getItem('lastName');
+        const phoneValue = await AsyncStorage.getItem('phone');
+        console.log("in set profile values, phoneValue: " + phoneValue);
 
-    const setProfileValues = async userAsyncStorage => {
-        const { firstName, email, lastName, phone } = userAsyncStorage;
-		setFirstName(firstName);
-		setLastName(lastName || '');
-		setEmail(email);
-		setPhone(phone || '');
+        if(emailValue) {
+            setEmail(emailValue);
+        }
+        if(firstNameValue) {
+            setFirstName(firstNameValue);
+        }415
+        if(lastNameValue) {
+            setLastName(lastNameValue);
+        }
+		if(phoneValue) {
+            setPhone(phoneValue);
+        }
     };
 
     const logOut = async () =>  {
@@ -96,22 +97,25 @@ const Profile = ({navigation}) => {
         loadProfileData();
         alert("Changes discarded.")
     };
+
     const saveForm = ({}) => {
-        if (validator.isMobilePhone(phone.toString(), 'en-US')) {
-            console.log("valid format: " + phone);
-            saveFormToDb();
+        if (phone) {
+            if (validator.isMobilePhone(phone.toString(), 'en-US')) {
+                saveFormToDb();
+            } else {
+                alert('💩 phone is not  OK: ' + phone);
+            }
         } else {
-            console.log("💩 invalid format: " + phone);
-            alert('💩 phone is not  OK: ' + phone);
+            saveFormToDb();
         }
     };
 
     const saveFormToDb = async () => {
         try {
              await AsyncStorage.setItem("email", email);
-            //  await AsyncStorage.setItem("firstName", firstName);
-            //  await AsyncStorage.setItem("lastName", lastName);
-            //  await AsyncStorage.setItem("phone", phone);
+             await AsyncStorage.setItem("firstName", firstName);
+             await AsyncStorage.setItem("lastName", lastName);
+             await AsyncStorage.setItem("phone", phone);
             alert("🦄 Saved to db.");
             console.log("🦄 Saved to db.");
        } catch (e) {
@@ -144,7 +148,7 @@ const Profile = ({navigation}) => {
                     <CustomInput name={'First name'} value={firstName} onChange={setFirstName} />
                     <CustomInput name={'Last name'} value={lastName} onChange={setLastName} />
                     <CustomInput name={'Email'} value={email} onChange={setEmail} keyboardType={'email-address'} />
-                    <CustomInput name={'Phone'} value={email} onChange={setPhone} keyboardType={'phone-pad'} />
+                    <CustomInput name={'Phone'} value={phone} onChange={setPhone} keyboardType={'phone-pad'} />
                 
 
                     <Text style={[styles.sectionTitle, styles.font, {marginTop: 20,}]}>Email notifications</Text>

@@ -4,7 +4,6 @@ import {Platform, View, Text, Pressable, StyleSheet } from 'react-native';
 const ProfileButton = ({title, onPress, priority=false}) => {
     white = '#fff';
     green = '#495E57'
-    console.log("priority: " + priority);
     
     var bgColor = white;
     var pressedBgColor = green;
