@@ -9,6 +9,7 @@ import { Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import AvatarView from './components/AvatarView';
+import Home from './screens/Home';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -78,25 +79,22 @@ export default function App() {
   
   
   return (
-    <NavigationContainer >
+    <NavigationContainer>
       <Stack.Navigator>
-      { (isOnboardingCompleted) ? (
-       <Stack.Screen 
-        name="Profile" 
-        component={Profile}  
-        options={{ 
+      <Stack.Group 
+        screenOptions={{
           headerLeft: (props) => <BackButton {...props} />,
-          headerTitle: (props) => <LogoTitle {...props} />, 
-          headerRight: (props) => <AvatarView image={avatarImage} 
-            firstName={firstName} 
-            lastName={lastName} 
-            small={true} {...props} />,
-        }}
-        style={{backgroundColor: "#fff"}}
-      />         
-      ) : (
-        <Stack.Screen name="Onboarding" component={Onboarding} />
-      )}
+          headerTitle: (props) => <LogoTitle {...props} />,
+          headerRight: (props) => <AvatarView image={avatarImage}
+            firstName={firstName}
+            lastName={lastName}
+            small={true} {...props} />,}} >
+        { (isOnboardingCompleted) ?  (
+              <><Stack.Screen name="Home" component={Home} /><Stack.Screen name="Profile" component={Profile} /></>
+          ) : (
+              <Stack.Screen name="Onboarding" component={Onboarding} />
+        )}
+      </Stack.Group>
      </Stack.Navigator>
     </NavigationContainer>
   );
