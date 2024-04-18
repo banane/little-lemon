@@ -1,19 +1,21 @@
 import { Text, Pressable, StyleSheet, View} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import CheckBox from 'expo-checkbox';
 
 const CheckBoxPreference = ({preferenceName, preferenceValue, onChange}) => {
-    console.log("value: " + preferenceValue);
-    console.log("name: " + preferenceName);
+
     return (
         <View style={styles.checkmarkView}>
-            <Pressable
-                onPress={onChange}>
-                <Ionicons 
-                    name={ preferenceValue ? "checkbox" : "checkbox-outline" }                             
-                    size={20} 
-                    color="#495E57" 
-                    style={styles.checkmark} />
-            </Pressable>
+            <CheckBox
+                value={preferenceValue}
+                onValueChange={onChange}
+                disabled={false}
+                color="#495E57"
+                size={20}
+                style={styles.checkmark}
+
+            />
+
+               
             <Text>{preferenceName}</Text>
          </View>
     );

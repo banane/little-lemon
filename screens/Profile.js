@@ -178,16 +178,16 @@ const Profile = ({navigation}) => {
                     </View>
 
                     <Text style={[styles.sectionTitle, styles.font, {marginTop: 20,}]}>Email notifications</Text>
-                    <CheckBoxPreference preferenceName={"orderStatuses"} 
+                    <CheckBoxPreference preferenceName={"Order Statuses"} 
                         preferenceValue={preferences.orderStatuses}
                         onChange={updateState('orderStatuses')} />
-                    <CheckBoxPreference preferenceName={"specialOffers"} 
+                    <CheckBoxPreference preferenceName={"Special Offers"} 
                         preferenceValue={preferences.specialOffers}
                         onChange={updateState('specialOffers')} />
-                    <CheckBoxPreference preferenceName={"passwordChanges"} 
+                    <CheckBoxPreference preferenceName={"Password Changes"} 
                         preferenceValue={preferences.passwordChanges}
                         onChange={updateState('passwordChanges')} />
-                    <CheckBoxPreference preferenceName={"passwordChanges"} 
+                    <CheckBoxPreference preferenceName={"Newsletter"} 
                         preferenceValue={preferences.newsletter}
                         onChange={updateState('newsletter')} />
                    
