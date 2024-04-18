@@ -8,10 +8,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
+import AvatarView from './components/AvatarView';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [isOnboardingCompleted, setOnboardingCompleted] = useState(false)
+  const [isOnboardingCompleted, setOnboardingCompleted] = useState(false);
+  const [avatarImage, setAvatarImage] = useState(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   const [fontsLoaded] = useFonts({
 		Markazi: require('./assets/fonts/MarkaziText-Regular.ttf'),
@@ -29,6 +33,7 @@ export default function App() {
         setOnboardingCompleted(isOnboardedValue);
         // setOnboardingCompleted(false);
         setIsLoading(false);
+        loadAvatar();
       } catch (e) {
         console.error('error loading app: ', error);
         setIsLoading(false);
@@ -37,6 +42,15 @@ export default function App() {
 
     loadApp();
   }, [fontsLoaded]);
+
+  const loadAvatar = async () => {
+    const avatarImageValue = await AsyncStorage.getItem("image");
+    setAvatarImage(avatarImageValue);
+    const firstNameValue = await AsyncStorage.getItem("firstName");
+    setFirstName(firstNameValue)
+    const lastNameValue = await AsyncStorage.getItem("lastName");
+    setLastName(lastNameValue);
+  }
 
 
   if (isLoading) {
@@ -48,15 +62,6 @@ export default function App() {
       <Image
         style={{ width: 200, height: 30 }}
         source={require('./assets/Logo.png')}
-      />
-    );
-  }
-
-  function Avatar() {
-    return (
-      <Image
-        style={{ width: 30, height: 30 }}
-        source={require('./assets/profile-tiny.png')}
       />
     );
   }
@@ -82,7 +87,10 @@ export default function App() {
         options={{ 
           headerLeft: (props) => <BackButton {...props} />,
           headerTitle: (props) => <LogoTitle {...props} />, 
-          headerRight: (props) => <Avatar {...props} />,
+          headerRight: (props) => <AvatarView image={avatarImage} 
+            firstName={firstName} 
+            lastName={lastName} 
+            small={true} {...props} />,
         }}
         style={{backgroundColor: "#fff"}}
       />         

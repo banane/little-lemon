@@ -5,18 +5,22 @@ function initials(firstName, lastName){
     return firstName && lastName ? firstName[0] + lastName[0] : '';
 };
 
-const AvatarView = ({image, firstName, lastName}) => {
+const AvatarView = ({image, firstName, lastName, small = false}) => {
 
     if (image) {
         return (
             <View>
-                <Image source={{ uri: image }} style={[styles.avatarImage, styles.imageBase]} />
+                <Image source={{ uri: image }} style={[styles.avatarImage, styles.imageBase,
+                { borderRadius: small ? 15 : 40, width: small ? 30 : 80, height: small? 30 : 80, marginRight: small ? 10 : 20 }
+                ]} />
             </View>
         );
     } else {
        return(
-            <View style={[styles.imageDefaultView, styles.imageBase]}>
-                <Text style={styles.imageDefaultText}>{initials(firstName, lastName)}</Text>
+            <View style={[styles.imageDefaultView, styles.imageBase, {
+                borderRadius: small ? 15 : 40, width: small ? 30 : 80, height: small? 30 : 80, marginRight: small ? 10 : 20
+            } ]}>
+                <Text style={[styles.imageDefaultText,{ fontSize: small ? 14 : 36, paddingTop: small ? 7 : 17}]}>{initials(firstName, lastName)}</Text>
             </View>   
         );
     }       
@@ -25,18 +29,12 @@ const AvatarView = ({image, firstName, lastName}) => {
 
 const styles = StyleSheet.create({
     imageBase: {
-        marginRight: 20,
-        borderRadius: 40,
         borderColor: '#495E57',
-        borderWidth: 1,
-        width: 80,
-        height: 80,
+        borderWidth: 1,       
     },
     imageDefaultText: {
-        fontSize: 36,
         color:'#F4CE14',
         alignSelf: 'center',
-        paddingTop: 17,
     },
     imageDefaultView: {
         backgroundColor: '#495E57',
