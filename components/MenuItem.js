@@ -1,14 +1,14 @@
 import { Image, StyleSheet, Text, View} from 'react-native';
 import { createTable,getMenuItems, saveMenuItems } from '../db/database.js'
 
-const MenuItem = ({name, description, price, image}) => {
+const MenuItem = ({name, description, price, image, key}) => {
     const imageFilePath = 'https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/'+image + '?raw=true';
     let USDollar = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
     });
     return ( 
-        <View style={{flexDirection:'row',flex: 1, padding: 20,}}>
+        <View style={{flexDirection:'row',flex: 1, padding: 20,}} key={key}>
             <View style={{flex: 0.7, alignItems: 'left'}}>
                 <Text style={styles.title}>{name}</Text>
                 <Text numberOfLines={2} ellipsizeMode='tail' 

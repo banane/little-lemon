@@ -12,19 +12,16 @@ const MenuList = () => {
         (async () => {
             try {
                 await createTable();
-                // console.log("table created")
+
                 let menuItems = await getMenuItems();
-                // console.log("menuItems from get: description" + menuItems[0].description)
-                // console.log("menuitems length: " + menuItems.length);
-                // if (!menuItems.length) {
-                console.log("no menu items, querying remote");
-                 menuItems = await fetchData(); // get from internet
-                saveMenuItems(menuItems); // to db
-                // }    
-    
+                console.log("menuItems from db: " + menuItems.size);
+                if (!menuItems.length) {
+                    console.log("no menu items, querying remote");
+                    menuItems = await fetchData(); // get from internet
+                    saveMenuItems(menuItems); // to db
+                }    
                 setData(menuItems);
             } catch (e) {
-                // Handle error
                 Alert.alert(e.message);
             }
         })();
@@ -51,14 +48,14 @@ const MenuList = () => {
     return(
         <FlatList 
             data={data}
+            keyExtractor={(item) => item.id}
             renderItem={({item}) => <MenuItem 
+                key={item.id}
                 name={item.name} 
                 description={item.description} 
                 price={item.price} 
-                image={item.image}/>}
-            keyExtractor={item => item.id}
+                image={item.image}/>}            
             ItemSeparatorComponent={Separator}
-            
             style={{paddingLeft: 20,marginTop: 10,}}
         />
     )

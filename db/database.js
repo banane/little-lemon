@@ -31,6 +31,7 @@ export function saveMenuItems(menuItems) {
   const stringValues = menuItems.map((item) => {
     return `('${item.name}', '${item.price}', '${item.description}', '${item.image}')`;
   }).join(",");
+  console.log("stringValues: " + stringValues);
 
   db.transaction((tx) => {
     tx.executeSql("INSERT INTO menuitems (name, price, description, image) VALUES " + String(stringValues))
