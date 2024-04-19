@@ -1,6 +1,7 @@
 import {  FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
 import MenuItem from '../components/MenuItem';
+import Separator from '../components/Separator';
 import { createTable, getMenuItems, saveMenuItems } from '../db/database';
 
 const MenuList = () => {
@@ -47,17 +48,19 @@ const MenuList = () => {
         } 
     }
 
-    return(<FlatList 
-        data={data}
-        renderItem={({item}) => <MenuItem 
-            name={item.name} 
-            description={item.description} 
-            price={item.price} 
-            image={item.image}/>}
-        keyExtractor={item => item.id}
-        
-        style={{paddingLeft: 20,marginTop: 10,}}
-    />
+    return(
+        <FlatList 
+            data={data}
+            renderItem={({item}) => <MenuItem 
+                name={item.name} 
+                description={item.description} 
+                price={item.price} 
+                image={item.image}/>}
+            keyExtractor={item => item.id}
+            ItemSeparatorComponent={Separator}
+            
+            style={{paddingLeft: 20,marginTop: 10,}}
+        />
     )
 };
 
