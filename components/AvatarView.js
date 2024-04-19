@@ -1,27 +1,27 @@
 
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, Pressable } from 'react-native';
 
 function initials(firstName, lastName){
     return firstName && lastName ? firstName[0] + lastName[0] : '';
 };
 
-const AvatarView = ({image, firstName, lastName, small = false}) => {
+const AvatarView = ({image, firstName, lastName, small = false, onPress}) => {
 
     if (image) {
         return (
-            <View>
+            <Pressable onPress={onPress}>
                 <Image source={{ uri: image }} style={[styles.avatarImage, styles.imageBase,
                 { borderRadius: small ? 15 : 40, width: small ? 30 : 80, height: small? 30 : 80, marginRight: small ? 10 : 20 }
                 ]} />
-            </View>
+            </Pressable>
         );
     } else {
        return(
-            <View style={[styles.imageDefaultView, styles.imageBase, {
+            <Pressable onPress={onPress} style={[styles.imageDefaultView, styles.imageBase, {
                 borderRadius: small ? 15 : 40, width: small ? 30 : 80, height: small? 30 : 80, marginRight: small ? 10 : 20
             } ]}>
                 <Text style={[styles.imageDefaultText,{ fontSize: small ? 14 : 36, paddingTop: small ? 7 : 17}]}>{initials(firstName, lastName)}</Text>
-            </View>   
+            </Pressable>   
         );
     }       
 };

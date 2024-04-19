@@ -61,7 +61,7 @@ export default function App() {
   function LogoTitle() {
     return (
       <Image
-        style={{ width: 200, height: 30 }}
+        style={{ width: 185, height: 40, margin: 4, padding: 5,}}
         source={require('./assets/Logo.png')}
       />
     );
@@ -71,30 +71,38 @@ export default function App() {
     return (
       <Ionicons 
                                 name="arrow-back-circle-sharp"                          
-                                size={20} 
+                                size={30} 
                                 color="#495E57" 
                                 />
     )
   }
-  
-  
+
+  function screenOptions (screenName, navigation) {
+      return {
+        headerTitle: props => <LogoTitle {...props} />,
+        headerRight:
+          screenName === 'Home'
+            ? () => <AvatarView onPress={() => navigation.navigate('Profile')} 
+              image={avatarImage}
+              firstName={firstName}
+              lastName={lastName}
+              small={true} />
+            : undefined,
+      };
+  };
+ 
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Group 
-        screenOptions={{
-          headerLeft: (props) => <BackButton {...props} />,
-          headerTitle: (props) => <LogoTitle {...props} />,
-          headerRight: (props) => <AvatarView image={avatarImage}
-            firstName={firstName}
-            lastName={lastName}
-            small={true} {...props} />,}} >
+
         { (isOnboardingCompleted) ?  (
-              <><Stack.Screen name="Home" component={Home} /><Stack.Screen name="Profile" component={Profile} /></>
+              <>
+              <Stack.Screen name="Home" component={Home}
+              options={ props => screenOptions( 'Home', props.navigation)} />
+              <Stack.Screen name="Profile" component={Profile} /></>
           ) : (
               <Stack.Screen name="Onboarding" component={Onboarding} />
         )}
-      </Stack.Group>
      </Stack.Navigator>
     </NavigationContainer>
   );

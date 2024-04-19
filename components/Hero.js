@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, View} from 'react-native';
 
-const Hero = () => {
+
+const Hero = ({onChangeText, searchValue}) => {
     return(
         <View style={styles.herobox}>
             <Text style={styles.title}>Little Lemon</Text>
@@ -16,6 +17,7 @@ const Hero = () => {
                     }]} source={require('../assets/Hero image.png')}/> 
                   </View>
             </View>
+           
         </View>
 
     );
@@ -32,14 +34,13 @@ const styles = StyleSheet.create({
         verticalAlign: 'center',
     },
     heroImage: {
-        verticalAlign: 'center',
         alignSelf: 'right',
         width: 136,
         height: 136,
         resizeMode:'center',
         borderRadius: 16,
         borderColor: '#000',
-        borderWIdth: 1,
+        borderWidth: 1,
     },
     twoColumnBox: {
         flowDirection: 'row',
