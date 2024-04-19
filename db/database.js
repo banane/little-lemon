@@ -1,13 +1,13 @@
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('little_lemon2');
+const db = SQLite.openDatabase('little_lemon.db');
 
 export async function createTable() {
   return new Promise((resolve, reject) => {
     db.transaction(
       (tx) => {
         tx.executeSql(
-          'create table if not exists menuitems (id integer primary key not null, name text, price text, description text, image text);'
+          'create table if not exists menuitems (id integer primary key not null, name text, price text, description text, image text, category text);'
         );
       },
       reject,
@@ -16,8 +16,34 @@ export async function createTable() {
   });
 }
 
+export async function filterByQueryAndCategories(query, activeCategories) {
+  return new Promise((resolve) => {
+    let newQuery = 'select * from menuitems where title like "%'+query+'%"';
+    if (activeCategories.length > 0) {
+      const categories = activeCategories.join('","');
+      newQuery += ' AND category in ("'+ categories + '")';
+    }
+
+    db.transaction((tx) => {
+      tx.executeSql(newQuery, [], (_, { rows }) => {
+        resolve(rows._array);
+      });
+    });
+  });
+}
+// filterByQueryAndCategories(
+//   query,
+//   activeCategories
+// );
+
+export function deleteItems() {
+  db.transaction((tx) => {
+    tx.executeSql('delete from menuitems;')
+  }
+  );
+}
+
 export async function getMenuItems() {
-  console.log("in db query to get menu items");
   return new Promise((resolve) => {
     db.transaction((tx) => {
       tx.executeSql('select * from menuitems', [], (_, { rows }) => {
@@ -28,13 +54,19 @@ export async function getMenuItems() {
 }
 
 export function saveMenuItems(menuItems) {
+  console.log("in save items");
+  deleteItems();
   const stringValues = menuItems.map((item) => {
-    return `('${item.name}', '${item.price}', '${item.description}', '${item.image}')`;
+    return `('${item.name}', '${item.price}', '${removeQuotes(item.description)}', '${item.image}', '${item.category}')`;
   }).join(",");
-  console.log("stringValues: " + stringValues);
+  const statement = "INSERT INTO menuitems (name, price, description, image, category) VALUES " + String(stringValues) + ";";
+  console.log(statement);
 
   db.transaction((tx) => {
-    tx.executeSql("INSERT INTO menuitems (name, price, description, image) VALUES " + String(stringValues))
-    
+    tx.executeSql(statement);    
   });  
+}
+
+function removeQuotes(str){
+  return str.replace(/'/g, "&#39;").replace(/"/g,"&quot;");
 }

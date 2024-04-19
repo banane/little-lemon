@@ -33,7 +33,6 @@ export default function App() {
         const isOnboardedValue = await AsyncStorage.getItem('isOnboarded');
         console.log("isOnboardedValue: " + isOnboardedValue);
         setOnboardingCompleted(isOnboardedValue);
-        // setOnboardingCompleted(false);
         setIsLoading(false);
         loadAvatar();
       } catch (e) {

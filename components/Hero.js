@@ -1,4 +1,5 @@
 import { Image, StyleSheet, Text, View} from 'react-native';
+import { Searchbar } from 'react-native-paper';
 
 
 const Hero = ({onChangeText, searchValue}) => {
@@ -17,13 +18,27 @@ const Hero = ({onChangeText, searchValue}) => {
                     }]} source={require('../assets/Hero image.png')}/> 
                   </View>
             </View>
-           
+            <Searchbar
+                onChangeText={onChangeText}
+                value={searchValue}
+                style={styles.searchBar}
+                iconColor="#495E57"
+                inputStyle={{ color: '#495E57', paddingBottom: 25}}
+            />
+
         </View>
 
     );
 };
 
 const styles = StyleSheet.create({
+    searchBar: {
+        backgroundColor: '#edefee',
+        shadowRadius: 0,
+        shadowOpacity: 0,
+        marginTop: 10,
+        height: 30,
+      },
     heroLeftText: {
         flex: 0.6,
         color: '#fff',
