@@ -1,13 +1,12 @@
 import { Image, StyleSheet, Text, View} from 'react-native';
+import { createTable,getMenuItems, saveMenuItems } from '../db/database.js'
 
-const MenuItem = ({title, description, price, image}) => {
-    console.log("image path: " + image);
+const MenuItem = ({name, description, price, image}) => {
     const imageFilePath = 'https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/'+image + '?raw=true';
-    console.log("image path: " + imageFilePath);
     return ( 
         <View style={{flexDirection:'row',flex: 1, padding: 20,}}>
             <View style={{flex: 0.7, alignItems: 'left'}}>
-                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.title}>{name}</Text>
                 <Text numberOfLines={2} ellipsizeMode='tail' 
                     style={styles.description}>{description}</Text>
                 <Text style={styles.price}>${price}</Text>
@@ -36,8 +35,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Karla',
         fontSize: 16,
         paddingTop: 10,
-        borderWidth: 1,
-        borderColor: 'yellow',
         color: '#000',
     }, 
     price: {
