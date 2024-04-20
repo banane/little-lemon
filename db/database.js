@@ -16,13 +16,15 @@ export async function createTable() {
   });
 }
 
-export async function filterByQueryAndCategories(query, activeCategories) {
+export async function filterByQueryAndCategories(query, chosenCategories) {
   return new Promise((resolve) => {
-    let newQuery = 'select * from menuitems where title like "%'+query+'%"';
-    if (activeCategories.length > 0) {
-      const categories = activeCategories.join('","');
+    let newQuery = 'select * from menuitems where name like "%'+query+'%"';
+    if (chosenCategories.length > 0) {
+      const categories = chosenCategories.join('","');
       newQuery += ' AND category in ("'+ categories + '")';
     }
+    console.log("*************************");
+    console.log(newQuery);
 
     db.transaction((tx) => {
       tx.executeSql(newQuery, [], (_, { rows }) => {
@@ -31,10 +33,7 @@ export async function filterByQueryAndCategories(query, activeCategories) {
     });
   });
 }
-// filterByQueryAndCategories(
-//   query,
-//   activeCategories
-// );
+
 
 export function deleteItems() {
   db.transaction((tx) => {

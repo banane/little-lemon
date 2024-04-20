@@ -1,11 +1,14 @@
 import { View} from 'react-native';
 import MenuList from '../components/MenuList';
 
-const HomeScreen = () => {
-   
 
+const HomeScreen = () => {
+
+   
     return(
-        <View><MenuList /></View>
+        <View>
+            <MenuList />
+        </View>
         
     );
 };

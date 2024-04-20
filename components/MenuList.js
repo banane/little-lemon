@@ -25,6 +25,7 @@ const MenuList = () => {
                     console.log("********************************** no menu items, querying remote");
                     menuItems = await fetchData(); // get from internet
                     saveMenuItems(menuItems); // to db
+                    console.log("********************************** saved, querying");
                     menuItems = await getMenuItems();
                 }    
                 setData(menuItems);
@@ -36,7 +37,7 @@ const MenuList = () => {
 
     useUpdateEffect(() => {
         (async () => {
-            const activeCategories = sections;
+            const chosenCategories = [];
         //   const activeCategories = sections.filter((s, i) => {
         //     // If all filters are deselected, all categories are active
         //     if (filterSelections.every((item) => item === false)) {
@@ -47,7 +48,7 @@ const MenuList = () => {
           try {
             const menuItems2 = await filterByQueryAndCategories(
               query,
-              activeCategories
+              chosenCategories
             );
             // const sectionListData = getSectionListData(menuItems2, sections);
             // setData(sectionListData);
