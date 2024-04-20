@@ -21,7 +21,8 @@ export default function App() {
   const [fontsLoaded] = useFonts({
 		Markazi: require('./assets/fonts/MarkaziText-Regular.ttf'),
 		Karla: require('./assets/fonts/Karla-Regular.ttf'),
-    KarlaBold: require('./assets/fonts/Karla-Bold.ttf')
+    KarlaBold: require('./assets/fonts/Karla-Bold.ttf'),
+    KarlaExtraBold: require('./assets/fonts/Karla-ExtraBold.ttf'),
 	});
 
   const Stack = createNativeStackNavigator();

@@ -7,8 +7,9 @@ const CustomInput = ({name, value, onChange, ...args}) => {
         <View>
             <Text style={[styles.formLabel, styles.font]}>{name}</Text>
             <View style={styles.inputBox}>
-                { (name == 'Phone') ? <MaskedTextInput  
-                    mask="(999)999-9999" 
+                { (name == 'Phone') ? 
+                <MaskedTextInput  
+                    mask="(999) 999-9999" 
                     value={value} 
                     onChangeText={onChange} 
                     styles={styles.input}  {...args} 

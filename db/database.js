@@ -52,6 +52,16 @@ export async function getMenuItems() {
   });
 }
 
+export async function getAllCategories() {
+  return new Promise((resolve) => {
+    db.transaction((tx) => {
+      tx.executeSql('select distinct category from menuitems order by category;', [], (_, { rows }) => {
+        resolve(rows._array);
+      });
+    });
+  });
+}
+
 export function saveMenuItems(menuItems) {
   console.log("in save items");
   deleteItems();
