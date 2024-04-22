@@ -37,7 +37,7 @@ export default function App() {
         setIsLoading(false);
         loadAvatar();
       } catch (e) {
-        console.error('error loading app: ', error);
+        console.error('error loading app: ', e);
         setIsLoading(false);
       }
     }
