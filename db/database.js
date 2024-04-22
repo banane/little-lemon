@@ -23,7 +23,7 @@ export async function filterByQueryAndCategories(query, chosenCategories) {
       const categories = chosenCategories.join('","');
       newQuery += ' AND category in ("'+ categories + '")';
     }
-    console.log("*************************");
+    console.log("filterByQueryAndCategories ");
     console.log(newQuery);
 
     db.transaction((tx) => {
@@ -63,13 +63,11 @@ export async function getAllCategories() {
 }
 
 export function saveMenuItems(menuItems) {
-  console.log("in save items");
   deleteItems();
   const stringValues = menuItems.map((item) => {
     return `('${item.name}', '${item.price}', '${removeQuotes(item.description)}', '${item.image}', '${item.category}')`;
   }).join(",");
   const statement = "INSERT INTO menuitems (name, price, description, image, category) VALUES " + String(stringValues) + ";";
-  console.log(statement);
 
   db.transaction((tx) => {
     tx.executeSql(statement);    

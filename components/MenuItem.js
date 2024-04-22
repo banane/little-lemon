@@ -8,7 +8,7 @@ const MenuItem = ({name, description, price, image}) => {
         currency: 'USD',
     });
     return ( 
-        <View style={{flexDirection:'row',flex: 1, padding: 20,}}>
+        <View style={{flexDirection:'row',flex: 1, paddingTop: 20, paddingBottom: 20,}}>
             <View style={{flex: 0.7, alignItems: 'left'}}>
                 <Text style={styles.title}>{name}</Text>
                 <Text numberOfLines={2} ellipsizeMode='tail' 

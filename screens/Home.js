@@ -1,4 +1,4 @@
-import { View} from 'react-native';
+import { SafeAreaView, View} from 'react-native';
 import MenuList from '../components/MenuList';
 
 
@@ -6,9 +6,9 @@ const HomeScreen = () => {
 
    
     return(
-        <View>
+        <SafeAreaView>
             <MenuList />
-        </View>
+        </SafeAreaView>
         
     );
 };

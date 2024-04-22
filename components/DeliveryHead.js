@@ -2,7 +2,7 @@ import { Text, View} from 'react-native';
 
 const DeliveryHead = () => {
     return (
-        <View style={{margin: 10,}}>
+        <View style={{marginLeft: 20, marginTop: 20, marginBottom: 10,}}>
             <Text style={{
                 fontFamily: 'KarlaExtraBold', 
                 fontSize: 20, 

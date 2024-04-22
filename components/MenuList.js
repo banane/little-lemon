@@ -1,9 +1,9 @@
-import {  Alert, FlatList, Text, View, } from 'react-native';
+import {  Alert, FlatList, ScrollView, View, } from 'react-native';
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import MenuItem from '../components/MenuItem';
 import Separator from '../components/Separator';
 import Hero from '../components/Hero';
-import { createTable, getMenuItems, saveMenuItems, getAllCategories, filterByQueryAndCategories } from '../db/database';
+import { createTable, getMenuItems, saveMenuItems, getAllCategories, filterByQueryAndCategories, deleteItems } from '../db/database';
 import debounce from 'lodash.debounce';
 import { useUpdateEffect  } from '../utils';
 import DeliveryHead from './DeliveryHead';
@@ -26,19 +26,17 @@ const MenuList = () => {
                 await createTable();
 
                 let menuItems = await getMenuItems();
-                // console.log("menuItems from db: price: " + menuItems[0].price);
                 if (!menuItems.length) {
-                    console.log("********************************** no menu items, querying remote");
                     menuItems = await fetchData(); // get from internet
                     saveMenuItems(menuItems); // to db
-                    console.log("********************************** saved, querying");
                     menuItems = await getMenuItems();
                 }    
                 setData(menuItems);
+                // Setup filter data
                 const sectionsData = await getAllCategories();
-                console.log("sections: " + JSON.stringify(sections));
                 let sectionArray = sectionsData.map((section) => { return section.category});
                 setSections(sectionArray);
+                console.log("useEffect data size: " + data.length);
             } catch (e) {
                 Alert.alert(e.message);
             }
@@ -47,32 +45,29 @@ const MenuList = () => {
 
     useUpdateEffect(() => {
         (async () => {
-            const activeCategories = sections.filter((s, i) => {
-                // If all filters are deselected, all categories are active
-                if (filterSelections.every((item) => item === false)) {
-                return true;
-                }
+            const activeCategories = sections.filter((s, i) => {               
                 return filterSelections[i];
             });
             try {
-                const menuItems2 = await filterByQueryAndCategories(
+                const filteredMenuItems = await filterByQueryAndCategories(
                     query,
                     activeCategories
                 );
-                setData(menuItems2);
-                console.log("**********in useUpdateEffect");
+                console.log("useUpdateEffect datalength: " + data.length)
+                console.log("useUpdateEffect filteredMenuItems   length: " + filteredMenuItems.length)
+                setData(filteredMenuItems);
             } catch (e) {
                 Alert.alert(e.message);
             }
         })();
-      }, [filterSelections, query]);
+    }, [filterSelections, query]);
     
-      const lookup = useCallback((q) => {
+    const lookup = useCallback((q) => {
         setQuery(q);
-      }, []);
+    }, []);
 
     const fetchData = async() => {
-        console.log("in fetch data");
+        console.log("((****************in fetch data");
         try {
             const response = await fetch(API_URL);
             if (!response.ok) {
@@ -93,11 +88,10 @@ const MenuList = () => {
     const onFilterChange = async (index) => {
         const arrayCopy = [...filterSelections];
         arrayCopy[index] = !filterSelections[index];
-        setFilterSelections(arrayCopy);
+        setFilterSelections(arrayCopy);        
       };
 
     const handleSearchChange = (text) => {
-        console.log("in handle search change");
         setQuery(text);
         debouncedLookup(text);
       };
@@ -106,10 +100,12 @@ const MenuList = () => {
         <View>
             <Hero onChangeText={handleSearchChange} queryValue={query}/>
             <DeliveryHead />
-            <Filters 
+            <ScrollView>
+                <Filters 
                 onChange={onFilterChange} 
                 selections={filterSelections} 
-                sections={sections} />
+                sections={sections} /></ScrollView>
+            <Separator />
             <FlatList 
                 data={data}
                 keyExtractor={(item) => item.id}
@@ -120,7 +116,7 @@ const MenuList = () => {
                     price={item.price} 
                     image={item.image}/>}            
                 ItemSeparatorComponent={Separator}
-                style={{paddingLeft: 20,marginTop: 10,}}
+                style={{marginTop: 4,marginLeft: 20,}}
             />
         </View>
     )
