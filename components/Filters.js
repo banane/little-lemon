@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   filterText: {
     fontFamily: 'KarlaExtraBold',
     fontSize: 13,
-    textTransform: 'uppercase',
+    textTransform: 'capitalize',
   }
 });
 
