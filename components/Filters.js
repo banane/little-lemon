@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
+    marginLeft: 20,
   },
   filterText: {
     fontFamily: 'KarlaExtraBold',
