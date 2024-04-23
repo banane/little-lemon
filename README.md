@@ -1,6 +1,7 @@
 # little-lemon
 - Instructions on running app
-- Wireframe is little-lemon-ab_canvas.zip
+- Wireframe is little-lemon-ab-wireframes.zip
+- Final designs are little-lemon-ab_canvas.zip
 
 # To install:
 
