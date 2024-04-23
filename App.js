@@ -99,9 +99,13 @@ export default function App() {
               <>
               <Stack.Screen name="Home" component={Home}
                  options={ props => screenOptions( 'Home', props.navigation)} />
-              <Stack.Screen name="Profile" component={Profile} /></>
-          ) : (
+              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="Onboarding" component={Onboarding} /></>
+              ) : (
+            <>
               <Stack.Screen name="Onboarding" component={Onboarding} />
+              <Stack.Screen name="Home" component={Home} options={ props => screenOptions( 'Home', props.navigation)} />
+           </>
         )}
      </Stack.Navigator>
     </NavigationContainer>

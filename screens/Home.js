@@ -18,7 +18,6 @@ const Home = () => {
     const [sections, setSections] = useState([]);
     const [activeFilters, setActiveFilters] = useState([]);
 
-
     async function loadMenu() {
         try {
             await createTable();
@@ -85,7 +84,6 @@ const Home = () => {
         /* remove from current active filters, or add it, depending */
         let indexOf = activeFilters.indexOf(item);
         if(indexOf < 0) {
-            console.log("adding item to list of filters");
             setActiveFilters( activeFilters => [...activeFilters,item]);
         } else {
             const newActiveFilters = activeFilters.filter((_, index) => index != indexOf);
@@ -98,7 +96,6 @@ const Home = () => {
             searchInput,
             activeFilters
         );
-        console.log("about to set data");
         setData(filteredMenuItems);
     }
 

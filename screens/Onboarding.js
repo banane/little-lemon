@@ -66,7 +66,7 @@ const Onboarding = ({navigation}) => {
                     onPress={ () => {
                      if (validForm) {
                         storeData();
-                        alert('🦄 is great')
+                        navigation.navigate('Home');
                      } else {
                         alert('💩 form is not OK');
                      }

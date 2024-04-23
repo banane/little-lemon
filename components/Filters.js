@@ -1,7 +1,6 @@
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 const Filters = ({ onChange, selections, sections }) => {
-    console.log("in filters: ",JSON.stringify(selections));
     
     return ( 
         (sections.length > 0) &&

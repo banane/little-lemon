@@ -35,11 +35,9 @@ const Profile = ({navigation}) => {
           quality: 1,
         });
     
-        console.log(result);
     
         if (!result.canceled) {
           setImage(result.assets[0].uri);
-          console.log("result.assets[0].uri" + result.assets[0].uri);
           setImageString(result.assets[0].uri);
         }
     };
@@ -108,7 +106,7 @@ const Profile = ({navigation}) => {
             setEmail('');
             setPhone('');
             await AsyncStorage.clear();
-            alert("🦄 Logged out.");
+            navigation.navigate('Onboarding');
         } catch (e) {
             console.log("clearing form error: " + e);
         }
@@ -125,7 +123,7 @@ const Profile = ({navigation}) => {
             if (validator.isMobilePhone(phone.toString(), 'en-US')) {
                 saveFormToDb();
             } else {
-                alert('💩 phone is not  OK: ' + phone);
+                alert('Phone format is incorrect, please change: ' + phone);
             }
         } else {
             saveFormToDb();
@@ -141,7 +139,7 @@ const Profile = ({navigation}) => {
              await AsyncStorage.setItem("preferences", JSON.stringify(preferences));
              await AsyncStorage.setItem("image", imageString);
             alert("🦄 Saved to db.");
-            console.log("🦄 Saved to db.");
+            console.log("Changes saved.");
        } catch (e) {
             console.log("Error saving email: " + e);
         }
