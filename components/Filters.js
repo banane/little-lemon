@@ -1,24 +1,31 @@
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 const Filters = ({ onChange, selections, sections }) => {
-  return ( (sections.length > 0) &&
-    <View style={styles.filtersContainer}>
-      {sections.map((section, index) => (
-        <TouchableOpacity
-          onPress={() => {
-            onChange(index);
-          }}
-          key={section}
-          style={[styles.filterButton,  { backgroundColor: selections[index] ? '#495E57' : '#D5D5D5'}]}>
-          <View>
-            <Text style={[styles.filterText, {color: selections[index] ? '#edefee' : '#333' }]}>
-              {section}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
+    console.log("in filters: ",JSON.stringify(selections));
+    
+    return ( 
+        (sections.length > 0) &&
+            <View style={styles.filtersContainer}>
+            {
+                sections.map((section, index) => (                     
+
+                    <TouchableOpacity
+                        onPress={() => {
+                            onChange(section);
+                        }}
+                        key={index}
+                        style={[styles.filterButton,  { backgroundColor: (selections.indexOf(section) > -1) ? '#495E57' : '#D5D5D5'}]}>
+                        <View>
+                            <Text style={[styles.filterText, {color: (selections.indexOf(section) > -1) ? '#edefee' : '#333' }]}>
+                            {section}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                )
+                )
+            }
+            </View>
+    );
 };
 
 const styles = StyleSheet.create({

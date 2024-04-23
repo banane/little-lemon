@@ -14,37 +14,57 @@ const Home = () => {
 
     const [data, setData] = useState([]);
     const API_URL = 'https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json';
-    const [query, setQuery] = useState('');
-    const [searchBarText, setSearchBarText] = useState('');
+    const [searchInput, setSearchInput] = useState('');
     const [sections, setSections] = useState([]);
-    const [filterSelections, setFilterSelections] = useState(
-        sections.map(() => false)
-    );
+    const [activeFilters, setActiveFilters] = useState([]);
+
+
+    async function loadMenu() {
+        try {
+            await createTable();
+            // Setup menu items data
+            let menuItems = await getMenuItems();
+            if (!menuItems.length) {
+                menuItems = await fetchData(); // get from internet
+                saveMenuItems(menuItems); // to db
+                menuItems = await getMenuItems();
+            } 
+            getSections();
+            setData(menuItems);
+        } catch (e) {
+            Alert.alert(e.message);
+        }
+    }
 
     useEffect(() => {
         (async () => {
-            try {
-                await createTable();
-
-                // Setup menu items data
-                let menuItems = await getMenuItems();
-                if (!menuItems.length) {
-                    menuItems = await fetchData(); // get from internet
-                    saveMenuItems(menuItems); // to db
-                    menuItems = await getMenuItems();
-                }    
-                setData(menuItems);
-                console.log("data size: " + data.length);
-
-                // Setup filter data
-                const sectionsData = await getAllCategories();
-                let sectionArray = sectionsData.map((section) => { return section.category});
-                setSections(sectionArray);
-            } catch (e) {
-                Alert.alert(e.message);
-            }
+           loadMenu();
         })();
     }, []);
+
+    useEffect(() => {
+        (async () => {
+            const debouncedFilterMenu = debounce(filterMenu, 500);
+            debouncedFilterMenu();
+        })();
+    }, [searchInput]);
+
+    useEffect(() => {
+        (async () => {
+           filterMenu();
+        })();
+    }, [activeFilters]);
+
+
+    const getSections = async() => {
+        try {
+            const sectionsData = await getAllCategories();
+            let sectionArray = sectionsData.map((section) => { return section.category});
+            setSections(sectionArray);
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     const fetchData = async() => {
         // get data from external source
@@ -61,41 +81,35 @@ const Home = () => {
         } 
     }
 
-    const lookup = useCallback((q) => {
-        setQuery(q);
-      }, []);
-    
-    const debouncedLookup = useMemo(() => debounce(lookup, 500), [lookup]);
-
-    const onFilterChange = (index) => {
-        const arrayCopy = [...filterSelections];
-        arrayCopy[index] = !filterSelections[index];
-        setFilterSelections(arrayCopy);        
-        updateMenuItems();
+    const onFilterChange = (item) => {
+        /* remove from current active filters, or add it, depending */
+        let indexOf = activeFilters.indexOf(item);
+        if(indexOf < 0) {
+            console.log("adding item to list of filters");
+            setActiveFilters( activeFilters => [...activeFilters,item]);
+        } else {
+            const newActiveFilters = activeFilters.filter((_, index) => index != indexOf);
+            setActiveFilters(newActiveFilters);
+        }
     };
 
-    const updateMenuItems = async() => {
+    const filterMenu = async() => {        
         const filteredMenuItems = await filterByQueryAndCategories(
-            query,
-            activeCategories
+            searchInput,
+            activeFilters
         );
+        console.log("about to set data");
         setData(filteredMenuItems);
-        console.log("filteredMenuItems: " + filteredMenuItems.length);
     }
 
-    const handleSearchChange = (text) => {
-        setSearchBarText(text);
-        debouncedLookup(text);
-      };
-   
     return(
         <SafeAreaView>
-            <Hero onChangeText={handleSearchChange} searchBarText={searchBarText}/> 
+            <Hero setSearchInput={setSearchInput}/> 
             <DeliveryHead />
             <ScrollView horizontal={true} >
                  <Filters 
                     onChange={onFilterChange} 
-                    selections={filterSelections} 
+                    selections={activeFilters} 
                     sections={sections} /> 
             </ScrollView>
             <Separator />

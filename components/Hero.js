@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, View} from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
 
-const Hero = ({onChangeText, searchValue}) => {
+const Hero = ({setSearchInput}) => {
     return(
         <View style={styles.herobox}>
             <Text style={styles.title}>Little Lemon</Text>
@@ -19,8 +19,7 @@ const Hero = ({onChangeText, searchValue}) => {
                   </View>
             </View>
             <Searchbar
-                onChangeText={onChangeText}
-                value={searchValue}
+                onChangeText={setSearchInput}
                 style={styles.searchBar}
                 iconColor="#495E57"
                 inputStyle={{ color: '#495E57', paddingBottom: 25}}
