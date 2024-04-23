@@ -13,9 +13,9 @@ const Filters = ({ onChange, selections, sections }) => {
                             onChange(section);
                         }}
                         key={index}
-                        style={[styles.filterButton,  { backgroundColor: (selections.indexOf(section) > -1) ? '#495E57' : '#D5D5D5'}]}>
+                        style={[styles.filterButton,  { backgroundColor: selections.includes(section) ? '#495E57' : '#D5D5D5'}]}>
                         <View>
-                            <Text style={[styles.filterText, {color: (selections.indexOf(section) > -1) ? '#edefee' : '#333' }]}>
+                            <Text style={[styles.filterText, {color: selections.includes(section) ? '#edefee' : '#333' }]}>
                             {section}
                             </Text>
                         </View>

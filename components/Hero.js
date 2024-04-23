@@ -24,9 +24,7 @@ const Hero = ({setSearchInput}) => {
                 iconColor="#495E57"
                 inputStyle={{ color: '#495E57', paddingBottom: 25}}
             />
-
         </View>
-
     );
 };
 
