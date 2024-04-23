@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         shadowRadius: 0,
         shadowOpacity: 0,
         marginTop: 10,
+        marginBottom: 10,
         height: 30,
       },
     heroLeftText: {
@@ -62,11 +63,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     herobox: {
-       padding: 20,
-       height: 200,
+       paddingLeft: 20,
+       paddingRight: 20,
        backgroundColor: '#495E57',
-       height: 300,
-
     },
     title: {
         color: '#F4CE14',
@@ -77,6 +76,7 @@ const styles = StyleSheet.create({
     subtitle: {
         fontFamily: 'Markazi',
         fontSize: 40,
+        marginTop: -10,
         color: '#fff'
     },
     paragraph: {

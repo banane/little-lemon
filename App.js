@@ -62,7 +62,6 @@ export default function App() {
   function LogoTitle() {
     return (
       <Image
-        style={{ width: 185, height: 40, margin: 4, padding: 5,}}
         source={require('./assets/Logo.png')}
       />
     );
@@ -99,7 +98,7 @@ export default function App() {
         { (isOnboardingCompleted) ?  (
               <>
               <Stack.Screen name="Home" component={Home}
-              options={ props => screenOptions( 'Home', props.navigation)} />
+                 options={ props => screenOptions( 'Home', props.navigation)} />
               <Stack.Screen name="Profile" component={Profile} /></>
           ) : (
               <Stack.Screen name="Onboarding" component={Onboarding} />

@@ -5,7 +5,7 @@ const DeliveryHead = () => {
         <View style={{marginLeft: 20, marginTop: 20, marginBottom: 10,}}>
             <Text style={{
                 fontFamily: 'KarlaExtraBold', 
-                fontSize: 20, 
+                fontSize: 16, 
                 textTransform: 'uppercase'}}>
                     Order for delivery!
                 </Text>

@@ -23,23 +23,24 @@ const Filters = ({ onChange, selections, sections }) => {
 
 const styles = StyleSheet.create({
   filterButton: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 4,
+    paddingRight: 10,
+    paddingLeft: 10,
     borderRadius: 16,
-    paddingTop: 8,
+    paddingTop: 6,
     paddingBottom: 8,
     borderWidth: 1,
     borderColor: 'white',
+    height: 30,
   },
   
   filtersContainer: {
+    height: 40,
+    justifyContent: 'space-between',
     backgroundColor: '#efefee',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
     marginLeft: 20,
+    flexDirection: 'row',
   },
   filterText: {
     fontFamily: 'KarlaExtraBold',

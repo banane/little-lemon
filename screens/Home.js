@@ -1,10 +1,11 @@
-import { SafeAreaView, ScrollView} from 'react-native';
+import { FlatList, StyleSheet, SafeAreaView, ScrollView} from 'react-native';
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import MenuList from '../components/MenuList';
 import DeliveryHead from '../components/DeliveryHead';
 import Filters from '../components/Filters';
 import Hero from '../components/Hero';
+import Separator from '../components/Separator';
 import debounce from 'lodash.debounce';
+import MenuItem from '../components/MenuItem';
 
 import { createTable, getMenuItems, saveMenuItems, getAllCategories, filterByQueryAndCategories } from '../db/database';
 
@@ -33,7 +34,7 @@ const Home = () => {
                     menuItems = await getMenuItems();
                 }    
                 setData(menuItems);
-
+                console.log("data size: " + data.length);
 
                 // Setup filter data
                 const sectionsData = await getAllCategories();
@@ -79,6 +80,7 @@ const Home = () => {
             activeCategories
         );
         setData(filteredMenuItems);
+        console.log("filteredMenuItems: " + filteredMenuItems.length);
     }
 
     const handleSearchChange = (text) => {
@@ -89,18 +91,39 @@ const Home = () => {
     return(
         <SafeAreaView>
             <Hero onChangeText={handleSearchChange} searchBarText={searchBarText}/> 
-              <DeliveryHead />
-            <ScrollView>
+            <DeliveryHead />
+            <ScrollView horizontal={true} >
                  <Filters 
                     onChange={onFilterChange} 
                     selections={filterSelections} 
                     sections={sections} /> 
             </ScrollView>
-            
-            <MenuList data={data}/>
+            <Separator />
+            <FlatList 
+                data={data}
+                keyExtractor={(item) => item.id}
+                renderItem={({item}) => <MenuItem 
+                    key={item.id}
+                    name={item.name} 
+                    description={item.description} 
+                    price={item.price} 
+                    image={item.image}/>}            
+                ItemSeparatorComponent={Separator}
+                style={styles.menuList}
+            />
         </SafeAreaView>
         
     );
 };
+
+const styles = StyleSheet.create({
+    menuList: {
+        marginTop: 4,
+        marginLeft: 20, 
+        backgroundColor: '#edefee', 
+        height: '40%',
+        marginRight: 20,
+    }
+});
 
 export default Home;
